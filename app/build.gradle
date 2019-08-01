@@ -48,6 +48,11 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.0.5'
     //Google Login
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
+
+    //naver
+    implementation files('libs/naveridlogin_android_sdk_4.2.5.aar')
+
+
 }
 
 apply plugin: 'com.google.gms.google-services'

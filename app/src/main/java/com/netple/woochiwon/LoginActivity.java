@@ -38,8 +38,12 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
+import com.nhn.android.naverlogin.OAuthLogin;
+import com.nhn.android.naverlogin.OAuthLoginHandler;
 
+import java.lang.ref.WeakReference;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,8 +70,40 @@ public class LoginActivity extends AppCompatActivity {
     private kakao_SessionCallBack kakao_sessionCallBack;
 
     //Google Login Var
+    private ImageButton fake_google_loginbtn;
     public static final int GOOGLE_RC_SIGN_IN=1;
     private GoogleSignInClient googleSignInClient;
+
+    //Naver Login Var
+    private ImageButton fake_naver_loginbtn;
+    public static OAuthLogin mOAuthLoginModule;
+    private OAuthLoginHandler mOAuthLoginHandler = new NaverLoginHandler(this);
+
+    private static class NaverLoginHandler extends OAuthLoginHandler {
+        private final WeakReference<LoginActivity> mActivity;
+
+        public NaverLoginHandler(LoginActivity activity) {
+            mActivity = new WeakReference<LoginActivity>(activity);
+        }
+
+
+        @Override
+        public void run(boolean success) {
+            LoginActivity activity = mActivity.get();
+
+            if (success) {
+                String accessToken = mOAuthLoginModule.getAccessToken(activity);
+                String refreshToken = mOAuthLoginModule.getRefreshToken(activity);
+                long expiresAt = mOAuthLoginModule.getExpiresAt(activity);
+                String tokenType = mOAuthLoginModule.getTokenType(activity);
+            } else {
+                String errorCode = mOAuthLoginModule.getLastErrorCode(activity).getCode();
+                String errorDesc = mOAuthLoginModule.getLastErrorDesc(activity);
+                Toast.makeText(activity, "errorCode:" + errorCode
+                        + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
     /**********************************************************
      * [END] Var Area
      **********************************************************/
@@ -80,6 +116,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         //ButterKnife.bind(this);
+
+        second_keyHash(this.getPackageName());
+
 
         /**************************************
          * [START] Get App Key Hash
@@ -137,25 +176,54 @@ public class LoginActivity extends AppCompatActivity {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        SignInButton signInButton = findViewById(R.id.btn_Google_login);
+        fake_google_loginbtn = findViewById(R.id.fakebtn_Google_login);
+        fake_google_loginbtn.setOnClickListener((view)->{
+            onClick(view);
+        });
+
+        /*
+        signInButton = findViewById(R.id.btn_Google_login);
         signInButton.setOnClickListener((view)->{
             onClick(view);
         });
+        */
 
         /**************************************
          * [END] Google Login Settings
          **************************************/
+
+
+
+        /**************************************
+         * [START] Naver Login Settings
+         **************************************/
+        mOAuthLoginModule = OAuthLogin.getInstance();
+        mOAuthLoginModule.init(this, "B4p9lfM_7aoNfpgSixRO", "qSbvF1XEdo", "WooChiWon");
+        fake_naver_loginbtn = findViewById(R.id.fakebtn_Naver_login);
+        fake_naver_loginbtn.setOnClickListener((view)->{
+            onClick(view);
+        });
+        /**************************************
+         * [END] Naver Login Settings
+         **************************************/
+
     }
 
     public void onClick(View v) {
         switch (v.getId()) {
 
+            //Kakao 로그인 버튼 리스너
             case R.id.fakebtn_Kakao_login:
                 kakao_loginbtn.performClick();
                 break;
 
+            //Naver 로그인 버튼 리스너
+            case R.id.fakebtn_Naver_login:
+                mOAuthLoginModule.startOauthLoginActivity(LoginActivity.this, mOAuthLoginHandler);
+                break;
+
             //Google 로그인 버튼 리스너
-            case R.id.btn_Google_login:
+            case R.id.fakebtn_Google_login:
                 google_signin();
                 break;
 
@@ -197,8 +265,8 @@ public class LoginActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
-            Log.d("Google Account Name:: ", account.getEmail());
-            Log.d("Google Account Name::", account.getId());
+            Log.d("Google Account Email:: ", account.getEmail());
+            Log.d("Google Account ID::", account.getId());
         } catch(ApiException e) {
             Log.e("google Error:: ", e.toString());
         }
@@ -226,9 +294,9 @@ public class LoginActivity extends AppCompatActivity {
                 long id = result.getId();
                 String UUID = result.getUUID();
 
-                Log.e("Profile : ", nickname + "");
-                Log.e("Profile : ", id + "");
-                Log.e("Profile : ", UUID + "");
+                Log.d("Profile : ", nickname + "");
+                Log.d("Profile : ", id + "");
+                Log.d("Profile : ", UUID + "");
             }
         });
     }
@@ -250,7 +318,34 @@ public class LoginActivity extends AppCompatActivity {
         //로그인 실패
         @Override
         public void onSessionOpenFailed(KakaoException exception) {
-            Log.d("Error", "Session Fail Error: " + exception.getMessage().toString());
+            Log.e("Error", "Session Fail Error: " + exception.getMessage().toString());
         }
+    }
+
+
+
+    /**************************************
+     * [START] Naver Login Settings
+     **************************************/
+
+    /**************************************
+     * [END] Naver Login Settings
+     **************************************/
+
+
+
+    private void second_keyHash(String s) {
+     try {
+        PackageInfo packageInfo = getPackageManager().getPackageInfo(s, PackageManager.GET_SIGNATURES);
+
+        for (Signature signature : packageInfo.signatures) {
+
+            MessageDigest md = MessageDigest.getInstance("SHA");
+            md.update(signature.toByteArray());
+            Log.d("***My Trace::::", android.util.Base64.encodeToString(md.digest(), android.util.Base64.NO_WRAP));
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
     }
 }
