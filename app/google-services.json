@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "32579655255",
+    "firebase_url": "https://woochiwon.firebaseio.com",
+    "project_id": "woochiwon",
+    "storage_bucket": "woochiwon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:32579655255:android:01fdbcba9d34b205",
+        "android_client_info": {
+          "package_name": "com.netple.woochiwon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "32579655255-d2u7qgn79l11r32hq39t1a8sd6n24320.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaYZLktsopnjZV1p4UfO4ZHFH622X1Sfg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "32579655255-d2u7qgn79l11r32hq39t1a8sd6n24320.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

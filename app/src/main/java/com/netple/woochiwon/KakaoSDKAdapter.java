@@ -11,11 +11,6 @@ import com.kakao.auth.KakaoAdapter;
 
 public class KakaoSDKAdapter extends KakaoAdapter {
 
-    public Activity activity;
-    public KakaoSDKAdapter(Activity activity) {
-        this.activity = activity;
-    }
-
     @Override
     public ISessionConfig getSessionConfig() {
 
@@ -47,12 +42,12 @@ public class KakaoSDKAdapter extends KakaoAdapter {
         return new IApplicationConfig() {
             @Override
             public Activity getTopActivity() {
-                return activity;
+                return GlobalApplication.getCurrentActivity();
             }
 
             @Override
             public Context getApplicationContext() {
-                return activity.getApplicationContext();
+                return GlobalApplication.getGlobalApplicationContext();
             }
         };
     }
