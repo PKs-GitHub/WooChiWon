@@ -177,13 +177,13 @@ public class LoginActivity extends AppCompatActivity {
 
             AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
             alt_bld.setMessage("로그인 화면으로 돌아갈까요?").setCancelable(
-                    false).setPositiveButton("예",
+                    false).setPositiveButton("네!",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // Action for 'Yes' Button
                             getSupportFragmentManager().popBackStack();
                         }
-                    }).setNegativeButton("아뇨",
+                    }).setNegativeButton("아니요!",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // Action for 'NO' Button
@@ -200,13 +200,13 @@ public class LoginActivity extends AppCompatActivity {
 
             AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
             alt_bld.setMessage("어플을 종료할까요?").setCancelable(
-                    false).setPositiveButton("예",
+                    false).setPositiveButton("네!",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // Action for 'Yes' Button
                             finish();
                         }
-                    }).setNegativeButton("아뇨",
+                    }).setNegativeButton("아니요!",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             // Action for 'NO' Button
@@ -347,11 +347,13 @@ public class LoginActivity extends AppCompatActivity {
                 String refreshToken = mOAuthLoginModule.getRefreshToken(activity);
                 long expiresAt = mOAuthLoginModule.getExpiresAt(activity);
                 String tokenType = mOAuthLoginModule.getTokenType(activity);
-            } else {
+
+                Log.d("###Naver Login Token::", accessToken);
+            }
+            else {
                 String errorCode = mOAuthLoginModule.getLastErrorCode(activity).getCode();
                 String errorDesc = mOAuthLoginModule.getLastErrorDesc(activity);
-                Toast.makeText(activity, "errorCode:" + errorCode
-                        + ", errorDesc:" + errorDesc, Toast.LENGTH_SHORT).show();
+                Log.e("###Naver Err::", "errorCode:" + errorCode);
             }
         }
     }

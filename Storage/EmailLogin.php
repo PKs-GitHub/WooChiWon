@@ -1,3 +1,5 @@
+//https://www.popit.kr/spring-security-oauth2-%EC%86%8C%EC%85%9C-%EC%9D%B8%EC%A6%9D-%EB%8D%B0%EC%9D%B4%ED%84%B0%EB%B2%A0%EC%9D%B4%EC%8A%A4-%EC%A0%80%EC%9E%A5
+
 <?php
 	/* mysql_connect('localhost', 'mysql_user', 'mysql_password'); */
 	$con = mysqli_connect('localhost', 'woochiwon_admin', '!rlska06!');

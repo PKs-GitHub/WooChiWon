@@ -14,12 +14,11 @@
         android:layout_marginBottom="3dp">
 
         <EditText
-            android:id="@+id/input_password"
+            android:id="@+id/input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword" />
-
+            android:hint="전화번호 혹은 이메일 주소"
+            android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -29,12 +28,24 @@
         android:layout_marginBottom="3dp">
 
         <EditText
-            android:id="@+id/input_email"
+            android:id="@+id/input_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
+            android:hint="비밀번호"
+            android:inputType="textPassword" />
+
     </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/link_find_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:text="비밀번호가 기억나지 않아요!"
+        android:textColor="#E91E63" />
+
 
     <Button
         android:id="@+id/btn_email_login"
@@ -52,10 +63,36 @@
         android:layout_marginBottom="3dp"
         android:gravity="center"
         android:text="이메일 계정 만들기"
+        android:textColor="#000000"
         android:textSize="16dip"
         android:textStyle="bold" />
 
     <!--[START] Kakao Login-->
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="10dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="2dp"
+            android:alpha="1.0"
+            android:text="SNS 계정으로 로그인 하기" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="?android:attr/listDivider" />>
+
+    </FrameLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
