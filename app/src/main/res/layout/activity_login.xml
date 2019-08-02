@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.netple.woochiwon.LoginActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -15,86 +17,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="24dp"
         android:contentDescription="@string/loading_fail"
-        tools:srcCompat="@tools:sample/avatars[3]" />
+        tools:srcCompat="@mipmap/app_logo" />
 
-    <!--[START] Kakao Login-->
     <FrameLayout
+        android:id="@+id/frag_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="3dp">
-
-
-        <com.kakao.usermgmt.LoginButton
-            android:id="@+id/btn_Kakao_login"
-            android:layout_width="250dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:visibility="gone"/>
-
-        <ImageButton
-            android:id="@+id/fakebtn_Kakao_login"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/loading_fail"
-            android:padding="0dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/btn_kakao_login" />
+        android:layout_height="match_parent">
     </FrameLayout>
-    <!--[END] Kakao Login-->
-
-    <!--[START] Naver Login-->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp">
-
-        <ImageButton
-            android:id="@+id/fakebtn_Naver_login"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/loading_fail"
-            android:padding="0dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/btn_naver_login" />
-
-    </FrameLayout>
-    <!--[END] Naver Login-->
-
-    <!--[START] Google Login-->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp">
-
-
-        <!--<com.google.android.gms.common.SignInButton-->
-            <!--android:id="@+id/btn_Google_login"-->
-            <!--android:layout_width="220dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:layout_gravity="center"/>-->
-
-        <ImageButton
-            android:id="@+id/fakebtn_Google_login"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/loading_fail"
-            android:padding="0dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/btn_google_login" />
-    </FrameLayout>
-    <!--[END] Google Login-->
-
-
-
 
 </LinearLayout>

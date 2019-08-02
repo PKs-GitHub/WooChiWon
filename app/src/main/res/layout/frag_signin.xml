@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.netple.woochiwon.LoginActivity"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp">
+
+        <EditText
+            android:id="@+id/input_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:inputType="textPassword" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp">
+
+        <EditText
+            android:id="@+id/input_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/btn_email_login"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:text="Log in with Email" />
+
+    <TextView
+        android:id="@+id/link_signup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="3dp"
+        android:gravity="center"
+        android:text="이메일 계정 만들기"
+        android:textSize="16dip"
+        android:textStyle="bold" />
+
+    <!--[START] Kakao Login-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="3dp">
+
+        <com.kakao.usermgmt.LoginButton
+            android:id="@+id/btn_Kakao_login"
+            android:layout_width="250dp"
+            android:layout_height="20dp"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <ImageButton
+            android:id="@+id/fakebtn_Kakao_login"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/loading_fail"
+            android:padding="0dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/btn_kakao_login" />
+    </FrameLayout>
+    <!--[END] Kakao Login-->
+
+    <!--[START] Naver Login-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp">
+
+        <ImageButton
+            android:id="@+id/fakebtn_Naver_login"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/loading_fail"
+            android:padding="0dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/btn_naver_login" />
+    </FrameLayout>
+    <!--[END] Naver Login-->
+
+    <!--[START] Google Login-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp">
+
+        <!--<com.google.android.gms.common.SignInButton-->
+        <!--android:id="@+id/btn_Google_login"-->
+        <!--android:layout_width="220dp"-->
+        <!--android:layout_height="20dp"-->
+        <!--android:layout_gravity="center"/>-->
+
+        <ImageButton
+            android:id="@+id/fakebtn_Google_login"
+            android:layout_width="250dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:contentDescription="@string/loading_fail"
+            android:padding="0dp"
+            android:scaleType="fitXY"
+            android:src="@mipmap/btn_google_login" />
+    </FrameLayout>
+    <!--[END] Google Login-->
+
+</LinearLayout>

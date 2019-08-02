@@ -15,13 +15,17 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.netple.woochiwon.LoginActivity">
+        <activity
+            android:name="com.netple.woochiwon.MainActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
 
+        <activity android:name="com.netple.woochiwon.LoginActivity"></activity>
 
         <!-- [START] Kakao 로그인 연동 -->
         <meta-data
