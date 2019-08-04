@@ -327,7 +327,7 @@ public  class SigninActivity extends Fragment {
 
                 try {
                     //{"resultcode":"00","message":"success","response":{"id":"37259829","email":"hgfhgfhgf@naver.com"}}
-                    emailAddress = HTTP_response.substring( HTTP_response.indexOf("eamil\":"), HTTP_response.indexOf("}")-1 );
+                    emailAddress = HTTP_response.substring( HTTP_response.indexOf("email\":")+7, HTTP_response.indexOf("}")-1 );
                     //emailAddress = jsonObject.getJSONObject("response").getString("email");
                 } catch(Exception e) {
                     Log.e("###Naver Err::", e.getMessage());
