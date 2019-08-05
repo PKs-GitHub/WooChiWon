@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.1"
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     defaultConfig {
         applicationId "com.netple.woochiwon"
         minSdkVersion 19
@@ -51,8 +51,12 @@ dependencies {
 
     //naver
     implementation files('libs/naveridlogin_android_sdk_4.2.5.aar')
+}
 
-
+configurations.all {
+    resolutionStrategy {
+        force 'com.android.support:support-v4:28.0.3'
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

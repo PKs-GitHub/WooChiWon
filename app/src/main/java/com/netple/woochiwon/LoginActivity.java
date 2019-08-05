@@ -163,8 +163,4 @@ public class LoginActivity extends Fragment  implements MainActivity.OnBackPress
     /**************************************
      * [END] Get App Key Hash
      **************************************/
-
-
-
-
 }

@@ -14,6 +14,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONObject;
+
 public class MainActivity extends AppCompatActivity {
 
     private FragmentManager main_FragmentManager;
@@ -32,6 +34,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        JSONObject jsonObject = new JSONObject();
+        String temptemp = "";
+
+        try {
+            String str = "{\"resultcode\":\"00\",\"message\":\"success\",\"response\":{\"id\":\"37259829\",\"email\":\"hgfhgfhgf@naver.com\"}}";
+
+            JSONObject parse_res = (JSONObject) jsonObject.get(str);
+
+
+            temptemp = (String) parse_res.get("eamil");
+            Log.d("###Test::", temptemp);
+            Log.d("###Temp", "");
+            //emailAddress = jsonObject.getJSONObject("response").getString("email");
+        } catch(Exception e) {
+            Log.e("###Naver Err::", e.getMessage());
+        }
 
 
         main_FragmentManager = getSupportFragmentManager();
@@ -62,10 +82,12 @@ public class MainActivity extends AppCompatActivity {
                     main_FragmentManager.beginTransaction().hide(active_Fragment).show(fragment1).commit();
                     active_Fragment = fragment1;
                     return true;
+
                 case R.id.bottom_nav_menu_2:
                     main_FragmentManager.beginTransaction().hide(active_Fragment).show(fragment2).commit();
                     active_Fragment = fragment2;
                     return true;
+
                 case R.id.bottom_nav_menu_3:
                     main_FragmentManager.beginTransaction().hide(active_Fragment).show(fragment3).commit();
                     active_Fragment = fragment3;
