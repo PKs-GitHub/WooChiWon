@@ -35,25 +35,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-        JSONObject jsonObject = new JSONObject();
-        String temptemp = "";
-
-        try {
-            String str = "{\"resultcode\":\"00\",\"message\":\"success\",\"response\":{\"id\":\"37259829\",\"email\":\"hgfhgfhgf@naver.com\"}}";
-
-            JSONObject parse_res = (JSONObject) jsonObject.get(str);
-
-
-            temptemp = (String) parse_res.get("eamil");
-            Log.d("###Test::", temptemp);
-            Log.d("###Temp", "");
-            //emailAddress = jsonObject.getJSONObject("response").getString("email");
-        } catch(Exception e) {
-            Log.e("###Naver Err::", e.getMessage());
-        }
-
-
         main_FragmentManager = getSupportFragmentManager();
         main_FragmentTransaction = main_FragmentManager.beginTransaction();
 

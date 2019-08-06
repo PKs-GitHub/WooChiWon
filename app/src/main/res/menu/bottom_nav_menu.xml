@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/bottom_nav_menu_1"
-        android:icon="@ic_bottom_timeline"
+        android:icon="@mipmap/ic_bottom_timeline"
         android:title="Timeline" />
 
     <item

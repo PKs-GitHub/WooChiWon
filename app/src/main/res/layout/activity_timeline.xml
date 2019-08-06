@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -44,72 +44,18 @@
         android:layout_marginTop="10dp"
         android:background="#7E0C0C0C" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RecyclerView_timeline_item"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:fastScrollEnabled="true"/>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/outside_border"
-                android:gravity="center"
-                android:text="Timeline" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/outside_border"
-                android:gravity="center"
-                android:text="Timeline2" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/outside_border"
-                android:gravity="center"
-                android:text="Timeline3" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/outside_border"
-                android:gravity="center"
-                android:text="Timeline4" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/outside_border"
-                android:gravity="center"
-                android:text="Timeline5" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/outside_border"
-                android:gravity="center"
-                android:text="Timeline6" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/outside_border"
-                android:gravity="center"
-                android:text="Timeline7" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:background="@drawable/outside_border"
-                android:gravity="center"
-                android:text="Timeline8" />
-
-        </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
