@@ -1,7 +1,9 @@
 package com.netple.woochiwon;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -13,8 +15,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.android.material.snackbar.Snackbar;
-
-import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,12 +28,19 @@ public class MainActivity extends AppCompatActivity {
     final Fragment fragment4 = LoginActivity.newInstance();
     final Fragment fragment5 = MyAccountActivity.newInstance();
 
-
+    public int ScreenWidth;
+    public int ScreenHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        ScreenWidth = size.x;
+        ScreenHeight = size.y;
 
         main_FragmentManager = getSupportFragmentManager();
         main_FragmentTransaction = main_FragmentManager.beginTransaction();

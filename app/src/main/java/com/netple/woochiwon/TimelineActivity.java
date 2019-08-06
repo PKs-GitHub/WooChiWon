@@ -1,17 +1,11 @@
 package com.netple.woochiwon;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.text.Layout;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,22 +17,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 public class TimelineActivity extends Fragment {
-
-
 
     private RecyclerView recyclerView;
     private RecyclerAdapter recyclerAdapter;
 
+    float scale;
 
     public static TimelineActivity newInstance() {
         return new TimelineActivity();
     }
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +43,8 @@ public class TimelineActivity extends Fragment {
 
         View rootView = inflater.inflate(R.layout.activity_timeline, container, false);
 
+
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.RecyclerView_timeline_item);
 
 
@@ -62,6 +55,9 @@ public class TimelineActivity extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        scale = getContext().getResources().getDisplayMetrics().density;
+
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
 
@@ -70,6 +66,8 @@ public class TimelineActivity extends Fragment {
 
         load_timeline_items();
     }
+
+
 
     //get timeline items from DB
     public void load_timeline_items() {
@@ -114,7 +112,7 @@ public class TimelineActivity extends Fragment {
         timeline_written_time_arr_list.add("YYYY MM DD hh:mm");
 
 
-        timeline_title_arr_list.add("AAAAAAAAAAAAA");
+        timeline_title_arr_list.add("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         timeline_title_arr_list.add("BBBBBBBBBBBBB");
         timeline_title_arr_list.add("T_T");
         timeline_title_arr_list.add("CCCCCCCCCCCCC");
@@ -124,16 +122,11 @@ public class TimelineActivity extends Fragment {
         timeline_content_img_resId_arr_list.add(0);
         timeline_content_img_resId_arr_list.add(R.mipmap.testimg3);
 
-        /*
-        timeline_content_img_resPath_arr_list.add("mipmap/ic_launcher_round/testimg1.png");
-        timeline_content_img_resPath_arr_list.add("mipmap/ic_launcher_round/testimg2.jpg");
-        timeline_content_img_resPath_arr_list.add("");
-        timeline_content_img_resPath_arr_list.add("mipmap/ic_launcher_round/testimg3.gif");
-        */
+
         timeline_content_txt_arr_list.add("Hi");
         timeline_content_txt_arr_list.add("Hello");
-        timeline_content_txt_arr_list.add("");
-        timeline_content_txt_arr_list.add("Coooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+        timeline_content_txt_arr_list.add("QQ");
+        timeline_content_txt_arr_list.add("Coooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
 
         for(int i=0; i<timeline_avatar_resId_arr_list.size(); i++) {
 
@@ -182,13 +175,16 @@ public class TimelineActivity extends Fragment {
 
         class ItemViewHolder extends RecyclerView.ViewHolder {
 
+            private LinearLayout whole_container;
+
             private ImageView avatar;
             private TextView nickname;
             private TextView location;
             private TextView written_time;
 
             private TextView title;
-            private FrameLayout content_img_container;
+            private LinearLayout content_img_container;
+            private LinearLayout.LayoutParams layoutParams;
             private ImageView content_img;
             private TextView content_txt;
 
@@ -203,7 +199,9 @@ public class TimelineActivity extends Fragment {
 
                 title = itemView.findViewById(R.id.timeline_title);
 
-                content_img_container = (FrameLayout) itemView.findViewById(R.id.timeline_content_img_container);
+                content_img_container = itemView.findViewById(R.id.timeline_content_img_container);
+                layoutParams = (LinearLayout.LayoutParams) content_img_container.getLayoutParams();
+
                 content_img = itemView.findViewById(R.id.timeline_content_img);
                 content_txt = itemView.findViewById(R.id.timeline_content_txt);
             }
@@ -224,14 +222,18 @@ public class TimelineActivity extends Fragment {
 
                 if (item.get_timeline_content_img_resId() != 0) {
 
-                    //ToDo
-                    Glide.with(getActivity()).load(item.get_timeline_content_img_resId()).override(400, 200).into(content_img);
+                    Glide.with(content_img.getContext()).load("").placeholder(item.get_timeline_content_img_resId()).into(content_img);
+                    //Glide.with(load(item.get_timeline_content_img_resId()).override(400, 300).into(content_img);
+
+                    layoutParams.height = (int) (250 * scale + 0.5f);
+                    content_img_container.setLayoutParams(layoutParams);
                 }
 
-                else
+                else {
                     content_img.setImageResource(0);
+                    //frame.setLayoutParams(not_has_image);
+                }
             }
-
         }
     }
 }

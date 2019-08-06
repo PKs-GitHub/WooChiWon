@@ -11,4 +11,9 @@
     <style
         name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <style name="BottomNavigationTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/bottomnav_primary</item>
+        <item name="android:textColorSecondary">@color/bottomnav_secondary</item>
+    </style>
+
 </resources>
