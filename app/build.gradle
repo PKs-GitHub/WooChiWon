@@ -43,6 +43,9 @@ dependencies {
     //jsoup
     implementation  'org.jsoup:jsoup:1.11.3'
 
+    //gson
+    implementation 'com.google.code.gson:gson:2.8.5'
+
     //kakao
     implementation group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
 

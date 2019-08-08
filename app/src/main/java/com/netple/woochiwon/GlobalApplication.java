@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Application;
 
 import com.kakao.auth.KakaoSDK;
+import com.netple.woochiwon.GeneralClass.KakaoSDKAdapter;
 
 public class GlobalApplication extends Application {
 

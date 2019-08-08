@@ -12,14 +12,14 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/btn_location_1"
+            android:id="@+id/btn_timeline_location_1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/button_ellipse"
             android:text="무슨시" />
 
         <Button
-            android:id="@+id/btn_location_2"
+            android:id="@+id/btn_timeline_location_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -27,7 +27,7 @@
             android:text="무슨구" />
 
         <Button
-            android:id="@+id/btn_location_3"
+            android:id="@+id/btn_timeline_location_3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"

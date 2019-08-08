@@ -1,4 +1,4 @@
-package com.netple.woochiwon;
+package com.netple.woochiwon.Activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +30,7 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
+import com.netple.woochiwon.R;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
 

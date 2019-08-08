@@ -1,4 +1,4 @@
-package com.netple.woochiwon;
+package com.netple.woochiwon.DataType;
 
 import android.media.Image;
 import android.widget.ImageView;

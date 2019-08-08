@@ -1,4 +1,4 @@
-package com.netple.woochiwon;
+package com.netple.woochiwon.Activity;
 
 import android.graphics.Point;
 import android.os.Bundle;
@@ -15,6 +15,8 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.android.material.snackbar.Snackbar;
+import com.netple.woochiwon.GeneralClass.NetworkStatus;
+import com.netple.woochiwon.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,6 +43,22 @@ public class MainActivity extends AppCompatActivity {
         display.getSize(size);
         ScreenWidth = size.x;
         ScreenHeight = size.y;
+
+        int status = NetworkStatus.getConnectivityStatus((getApplicationContext()));
+
+        switch (status) {
+            case NetworkStatus.TYPE_MOBILE:
+                Log.d("###Network Status::", "Mobile Network");
+                break;
+
+            case NetworkStatus.TYPE_WIFI:
+                Log.d("###Network Status::", "WIFI Network");
+                break;
+
+            default:
+                Log.d("###Network Status::", "Network not available");
+                break;
+        }
 
         main_FragmentManager = getSupportFragmentManager();
         main_FragmentTransaction = main_FragmentManager.beginTransaction();

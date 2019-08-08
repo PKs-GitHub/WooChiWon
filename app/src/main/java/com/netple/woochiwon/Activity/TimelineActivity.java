@@ -1,4 +1,4 @@
-package com.netple.woochiwon;
+package com.netple.woochiwon.Activity;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.netple.woochiwon.DataType.TimelineItem;
+import com.netple.woochiwon.R;
 
 import java.util.ArrayList;
 

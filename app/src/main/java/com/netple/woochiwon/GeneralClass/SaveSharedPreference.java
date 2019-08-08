@@ -1,4 +1,4 @@
-package com.netple.woochiwon;
+package com.netple.woochiwon.GeneralClass;
 
 import android.content.Context;
 import android.content.SharedPreferences;

@@ -1,4 +1,4 @@
-package com.netple.woochiwon;
+package com.netple.woochiwon.Activity;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,9 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-public class MyAccountActivity extends Fragment {
-    public static MyAccountActivity newInstance() {
-        return new MyAccountActivity();
+import com.netple.woochiwon.R;
+
+public class Frag3Activity extends Fragment {
+
+    public static Frag3Activity newInstance() {
+        return new Frag3Activity();
     }
 
     @Override
@@ -22,6 +25,6 @@ public class MyAccountActivity extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_frag2, container, false);
+        return inflater.inflate(R.layout.activity_frag3, container, false);
     }
 }

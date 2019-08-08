@@ -1,4 +1,4 @@
-package com.netple.woochiwon;
+package com.netple.woochiwon.Activity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,6 +17,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.netple.woochiwon.R;
 
 import java.security.MessageDigest;
 
