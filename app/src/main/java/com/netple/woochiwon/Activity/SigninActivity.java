@@ -247,7 +247,7 @@ public  class SigninActivity extends Fragment {
 
     public void kakao_request() {
 
-        UserManagement.requestMe(new MeResponseCallback() {
+        UserManagement.getInstance().requestMe(new MeResponseCallback() {
             @Override
             public void onSessionClosed(ErrorResult errorResult) {
                 Log.d("###Kakao Err::", "Session Closed Error: " + errorResult.toString());

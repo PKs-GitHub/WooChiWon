@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     final Fragment fragment1 = TimelineActivity.newInstance();
     final Fragment fragment2 = SearchActivity.newInstance();
-    final Fragment fragment3 = Frag3Activity.newInstance();
+    final Fragment fragment3 = BoardActivity.newInstance();
     final Fragment fragment4 = LoginActivity.newInstance();
     final Fragment fragment5 = MyAccountActivity.newInstance();
 

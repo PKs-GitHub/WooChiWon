@@ -11,10 +11,10 @@ import androidx.fragment.app.Fragment;
 
 import com.netple.woochiwon.R;
 
-public class Frag3Activity extends Fragment {
+public class BoardActivity extends Fragment {
 
-    public static Frag3Activity newInstance() {
-        return new Frag3Activity();
+    public static BoardActivity newInstance() {
+        return new BoardActivity();
     }
 
     @Override

@@ -31,10 +31,7 @@ import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -57,9 +54,7 @@ public class SearchActivity extends Fragment {
     public ArrayList<toGSON_basicInfo.basicInfo> kinderInfo;
 
 
-    public static SearchActivity newInstance() {
-        return new SearchActivity();
-    }
+    public static SearchActivity newInstance() { return new SearchActivity(); }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,8 +95,6 @@ public class SearchActivity extends Fragment {
 
     public void setSGGspinner() {
 
-        ArrayList<String> SSGlist = new ArrayList<>();
-
         String selected_SIDOname = sidoSpinner.getSelectedItem().toString();
 
         String URL = "http://e-childschoolinfo.moe.go.kr/code/" + locationCode.getSIDOcode(selected_SIDOname) + "/findSggList.do";
@@ -117,7 +110,12 @@ public class SearchActivity extends Fragment {
             doc = new ConnetingTask().execute(dataParams).get();
 
             toGSON_findSggList[] SGGarr = gson.fromJson(doc.text(), toGSON_findSggList[].class);
-            List<toGSON_findSggList> SGGlist = Arrays.asList(SGGarr);
+
+            ArrayList<String> SGGlist = new ArrayList<>();
+            SGGlist.add("전체");
+
+            for(toGSON_findSggList instance:SGGarr)
+                SGGlist.add(instance.getSggName());
 
             sggSpinner.setAdapter(new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, SGGlist));
 
@@ -130,6 +128,36 @@ public class SearchActivity extends Fragment {
 
     public void setRospinner() {
 
+        String selected_SIDOSSGname = sidoSpinner.getSelectedItem().toString() + sggSpinner.getSelectedItem().toString();
+
+        String URL = "http://e-childschoolinfo.moe.go.kr/code/findRoList.do";
+
+        Document doc;
+        Gson gson = new Gson();
+
+        HashMap<String, String> dataParams = new HashMap<>();
+        dataParams.put("URL", URL);
+        dataParams.put("sisggNm", selected_SIDOSSGname);
+
+        try {
+            //get data from web thread start
+            doc = new ConnetingTask().execute(dataParams).get();
+
+            toGSON_findSggList[] SGGarr = gson.fromJson(doc.text(), toGSON_findSggList[].class);
+
+            ArrayList<String> SGGlist = new ArrayList<>();
+            SGGlist.add("전체");
+
+            for(toGSON_findSggList instance:SGGarr)
+                SGGlist.add(instance.getSggName());
+
+            sggSpinner.setAdapter(new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, SGGlist));
+
+            Log.d("###BP", "");
+
+        } catch (Exception e) {
+            Log.e("###getKinderList Err::", e.toString());
+        }
     }
 
     /*************************************************

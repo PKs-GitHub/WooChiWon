@@ -3,6 +3,8 @@ package com.netple.woochiwon.GeneralClass;
 import android.app.Activity;
 import android.content.Context;
 
+import androidx.annotation.Nullable;
+
 import com.kakao.auth.ApprovalType;
 import com.kakao.auth.AuthType;
 import com.kakao.auth.IApplicationConfig;
@@ -17,7 +19,7 @@ public class KakaoSDKAdapter extends KakaoAdapter {
 
         return new ISessionConfig() {
             @Override
-            public AuthType[] getAuthTypes() {
+            public AuthType[] getAuthTypes()  {
                 return new AuthType[] {AuthType.KAKAO_LOGIN_ALL};
             }
 
@@ -26,6 +28,12 @@ public class KakaoSDKAdapter extends KakaoAdapter {
                 return false;
             }
 
+            @Override
+            public boolean isSecureMode() {
+                return false;
+            }
+
+            @Nullable
             @Override
             public ApprovalType getApprovalType() {
                 return ApprovalType.INDIVIDUAL;
@@ -40,8 +48,10 @@ public class KakaoSDKAdapter extends KakaoAdapter {
 
     @Override
     public IApplicationConfig getApplicationConfig() {
+
         return new IApplicationConfig() {
-            @Override
+
+            //@Override
             public Activity getTopActivity() {
                 return GlobalApplication.getCurrentActivity();
             }
