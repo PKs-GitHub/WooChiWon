@@ -1,22 +1,16 @@
 package com.netple.woochiwon.Activity;
 
-import android.content.Context;
-import android.icu.util.TimeZone;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.GridLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
@@ -34,7 +28,6 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.lang.reflect.Array;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -149,8 +142,10 @@ public class SearchActivity extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 if(sidoSpinner.getSelectedItem().toString().indexOf("전체") >= 0) {
-                    sggSpinner.setSelection(0, false);
+                    sggSpinner.setAdapter(null);
                     sggSpinner.setVisibility(Spinner.INVISIBLE);
+                    roSpinner.setAdapter(null);
+                    roSpinner.setVisibility(Spinner.INVISIBLE);
                 }
 
                 else {
@@ -172,7 +167,7 @@ public class SearchActivity extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 if( sidoSpinner.getSelectedItem().toString().indexOf("전체") >= 0 || sggSpinner.getSelectedItem().toString().indexOf("전체") >= 0 ) {
-                    roSpinner.setSelection(0, false);
+                    roSpinner.setAdapter(null);
                     roSpinner.setVisibility(Spinner.INVISIBLE);
                 }
 
