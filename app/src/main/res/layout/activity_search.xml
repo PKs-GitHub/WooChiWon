@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
+    android:id="@+id/activity_search_LinearLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,13 +25,14 @@
             android:layout_weight="0.7">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchfield"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="기관명 검색" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/search_btn"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
@@ -37,10 +42,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_marginTop="20dp"
+        android:background="@drawable/border_bottom"
         android:orientation="horizontal"
-        android:paddingRight="50dp"
         android:weightSum="3">
 
         <Spinner
@@ -54,41 +59,48 @@
             android:id="@+id/sgg_spinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:visibility="invisible" />
 
         <Spinner
             android:id="@+id/ro_spinner"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:visibility="invisible" />
     </LinearLayout>
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
+    <LinearLayout
+        android:id="@+id/progressBarLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="10dp"
-        android:background="#7E0C0C0C" />
+        android:orientation="vertical"
+        android:visibility="gone">
+
+    </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/activity_search_FrameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <ProgressBar
             android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:indeterminate="false"
-            android:progressDrawable="@drawable/progress"
-            tools:visibility="invisible" />
-        <!--style="?android:attr/progressBarStyle"-->
+            android:visibility="gone" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
+            android:clickable="true"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -98,6 +110,10 @@
                 android:fastScrollEnabled="true" />
 
         </androidx.core.widget.NestedScrollView>
+
+        <!--style="?android:attr/progressBarStyle"-->
+        <!--android:progressDrawable="@drawable/progress"-->
+
     </FrameLayout>
 
 </LinearLayout>

@@ -1,19 +1,27 @@
 package com.netple.woochiwon.Activity;
 
+import android.content.Context;
+import android.icu.util.TimeZone;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
@@ -26,12 +34,14 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.lang.reflect.Array;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import javax.net.ssl.HostnameVerifier;
@@ -41,17 +51,35 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
+
 public class SearchActivity extends Fragment {
 
+    private SearchActivity searchActivity = this;
+    private InputMethodManager imm;
+
     private ProgressBar progressBar;
+
+    private EditText searchEdittext;
+
     private Spinner sidoSpinner, sggSpinner, roSpinner;
+
+    private Button searchbtn;
+
+
+
+    private final static ArrayList<String> SIDO_list = new ArrayList<>(
+            Arrays.asList("전체", "서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시", "대전광역시", "울산광역시", "세종특별자치시", "경기도", "강원도")
+    );
+    private ArrayList<String> SGG_list, RO_list;
 
     private final static String kinder_key = "7ec2f18d1fe74920ab726f1df7eb63f3";
     private final static String USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/33.0.1750.152 Safari/537.36";
     //Window OS: Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36
 
     private LocationCode locationCode = new LocationCode();
-    public ArrayList<toGSON_basicInfo.basicInfo> kinderInfo;
+    public ArrayList<toGSON_basicInfo.basicInfo> kinderInfo_list;
 
 
     public static SearchActivity newInstance() { return new SearchActivity(); }
@@ -60,11 +88,13 @@ public class SearchActivity extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Soft keyboard auto on/off control
+        imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+
         //set progressbar
 
 
-        //get Kinder informaion from web
-        getKinderList();
+
     }
 
     @Nullable
@@ -74,9 +104,15 @@ public class SearchActivity extends Fragment {
         View rootView = inflater.inflate(R.layout.activity_search, container, false);
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+
+        searchEdittext = (EditText) rootView.findViewById(R.id.searchfield);
+        searchEdittext.setFocusableInTouchMode(true);
+
         sidoSpinner = (Spinner) rootView.findViewById(R.id.sido_spinner);
         sggSpinner = (Spinner) rootView.findViewById(R.id.sgg_spinner);
         roSpinner = (Spinner) rootView.findViewById(R.id.ro_spinner);
+
+        searchbtn = (Button) rootView.findViewById(R.id.search_btn);
 
         return rootView;
     }
@@ -85,11 +121,46 @@ public class SearchActivity extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        searchEdittext.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+
+                Log.d("###BP:::", "onFocusChange b:" + b);
+                if(!b) {
+                    imm.hideSoftInputFromWindow(searchEdittext.getWindowToken(),0);
+                }
+
+                else if(b) {
+                    imm.showSoftInput(searchEdittext, 0);
+                }
+            }
+        });
+
+        searchbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getKinderList();
+            }
+        });
+
+
         sidoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    setSGGspinner();
+                if(sidoSpinner.getSelectedItem().toString().indexOf("전체") >= 0) {
+                    sggSpinner.setSelection(0, false);
+                    sggSpinner.setVisibility(Spinner.INVISIBLE);
+                }
+
+                else {
+                    setSGGList();
+                    sggSpinner.setAdapter(new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, SGG_list));
+                    sggSpinner.setSelection(0, false);
+
+                    sggSpinner.setVisibility(Spinner.VISIBLE);
+                }
+
             }
 
             @Override
@@ -100,101 +171,114 @@ public class SearchActivity extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    setRospinner();
+                if( sidoSpinner.getSelectedItem().toString().indexOf("전체") >= 0 || sggSpinner.getSelectedItem().toString().indexOf("전체") >= 0 ) {
+                    roSpinner.setSelection(0, false);
+                    roSpinner.setVisibility(Spinner.INVISIBLE);
+                }
+
+                else {
+                    setROList();
+                    roSpinner.setAdapter(new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, RO_list));
+                    roSpinner.setSelection(0, false);
+
+                    roSpinner.setVisibility(Spinner.VISIBLE);
+                }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { }
         });
+
+        roSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+                //do nothing
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+        //get Kinder informaion from web
+        //getKinderList();
+
     }
 
-    public void setSGGspinner() {
+
+    public void setSGGList() {
+
+        SGG_list = new ArrayList<>();
 
         String selected_SIDOname = sidoSpinner.getSelectedItem().toString();
-        ArrayList<String> SGGlist = new ArrayList<>();
 
-        if(selected_SIDOname.indexOf("전체") >= 0) {
-            SGGlist.add("");
-            sggSpinner.setAdapter(new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, SGGlist));
-            sggSpinner.setSelection(0, false);
+        String URL = "http://e-childschoolinfo.moe.go.kr/code/" + locationCode.getSIDOcode(selected_SIDOname) + "/findSggList.do";
+
+        Document doc;
+        Gson gson = new Gson();
+
+        HashMap<String, String> dataParams = new HashMap<>();
+        dataParams.put("URL", URL);
+
+        try {
+            //get data from web thread start
+            doc = new ConnetingTask().execute(dataParams).get();
+
+            toGSON_findSggRoList[] SGGarr = gson.fromJson(doc.text(), toGSON_findSggRoList[].class);
+
+            SGG_list.add("전체");
+
+            for(toGSON_findSggRoList instance:SGGarr)
+                SGG_list.add(instance.getSggRoName());
+
+            Log.d("###BP", "");
+
+        } catch (Exception e) {
+            Log.e("###getKinderList Err::", e.toString());
         }
-        else {
-            String URL = "http://e-childschoolinfo.moe.go.kr/code/" + locationCode.getSIDOcode(selected_SIDOname) + "/findSggList.do";
 
-            Document doc;
-            Gson gson = new Gson();
-
-            HashMap<String, String> dataParams = new HashMap<>();
-            dataParams.put("URL", URL);
-
-            try {
-                //get data from web thread start
-                doc = new ConnetingTask().execute(dataParams).get();
-
-                toGSON_findSggRoList[] SGGarr = gson.fromJson(doc.text(), toGSON_findSggRoList[].class);
-
-
-                SGGlist.add("전체");
-
-                for(toGSON_findSggRoList instance:SGGarr)
-                    SGGlist.add(instance.getSggRoName());
-
-                sggSpinner.setAdapter(new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, SGGlist));
-                sggSpinner.setSelection(0, false);
-
-                Log.d("###BP", "");
-
-            } catch (Exception e) {
-                Log.e("###getKinderList Err::", e.toString());
-            }
-        }
     }
 
-    public void setRospinner() {
+    public void setROList() {
+
+        RO_list = new ArrayList<>();
 
         String selected_SIDOname = sidoSpinner.getSelectedItem().toString();
-        String selected_SSGname = sggSpinner.getSelectedItem().toString();
-
-        ArrayList<String> Rolist = new ArrayList<>();
-
-        if( selected_SIDOname.indexOf("전체") >= 0 || selected_SSGname.indexOf("전체") >= 0 ) {
-            Rolist.add("");
-            roSpinner.setAdapter(new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, Rolist));
-            roSpinner.setSelection(0, false);
-        }
-
-        else {
-            String URL = "http://e-childschoolinfo.moe.go.kr/code/findRoList.do";
-
-            Document doc;
-            Gson gson = new Gson();
-
-            HashMap<String, String> dataParams = new HashMap<>();
-            dataParams.put("URL", URL);
-            dataParams.put("sisggNm", selected_SIDOname + selected_SSGname);
-
-            try {
-                //get data from web thread start
-                doc = new ConnetingTask().execute(dataParams).get();
-
-                toGSON_findSggRoList[] Roarr = gson.fromJson(doc.text(), toGSON_findSggRoList[].class);
+        String selected_SGGname = sggSpinner.getSelectedItem().toString();
 
 
-                Rolist.add("전체");
+        roSpinner.setVisibility(Spinner.VISIBLE);
 
-                for(toGSON_findSggRoList instance:Roarr)
-                    Rolist.add(instance.getSggRoName());
+        String URL = "http://e-childschoolinfo.moe.go.kr/code/findRoList.do";
 
-                roSpinner.setAdapter(new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item, Rolist));
-                roSpinner.setSelection(0, false);
+        Document doc;
+        Gson gson = new Gson();
 
-                Log.d("###BP", "");
+        HashMap<String, String> dataParams = new HashMap<>();
+        dataParams.put("URL", URL);
+        dataParams.put("sisggNm", selected_SIDOname + selected_SGGname);
 
-            } catch (Exception e) {
-                Log.e("###getKinderList Err::", e.toString());
-            }
+        try {
+            //get data from web thread start
+            doc = new ConnetingTask().execute(dataParams).get();
+
+            toGSON_findSggRoList[] Roarr = gson.fromJson(doc.text(), toGSON_findSggRoList[].class);
+
+            RO_list.add("전체");
+            for(toGSON_findSggRoList instance:Roarr)
+                RO_list.add(instance.getSggRoName());
+
+            Log.d("###BP", "");
+
+        } catch (Exception e) {
+            Log.e("###getKinderList Err::", e.toString());
         }
     }
+
 
     /*************************************************
      * [START] Jsoup Crawling
@@ -238,15 +322,19 @@ public class SearchActivity extends Fragment {
 
     public void getKinderList() {
 
-        kinderInfo = new ArrayList<>();
+        kinderInfo_list = new ArrayList<>();
+
+        String SIDOcode = locationCode.getSIDOcode(sidoSpinner.getSelectedItem().toString());
+        String SGGcode = locationCode.getSGGcode(sggSpinner.getSelectedItem().toString());
+
 
         Document doc;
 
         HashMap<String, String> dataParams = new HashMap<>();
         dataParams.put("URL", "http://e-childschoolinfo.moe.go.kr/api/notice/basicInfo.do");
         dataParams.put("key", kinder_key);
-        dataParams.put("sidoCode", "11");
-        dataParams.put("sggCode", "11140");
+        dataParams.put("sidoCode", SIDOcode);
+        dataParams.put("sggCode", SGGcode);
 
         try {
             //get data from web thread start
@@ -255,7 +343,7 @@ public class SearchActivity extends Fragment {
             toGSON_basicInfo toGSON_basicInfo = new Gson().fromJson(doc.text(), toGSON_basicInfo.class);
 
             for(toGSON_basicInfo.basicInfo data: toGSON_basicInfo.getbasicInfo())
-                kinderInfo.add(data);
+                kinderInfo_list.add(data);
 
             Log.d("###BP", "");
 
@@ -285,15 +373,16 @@ public class SearchActivity extends Fragment {
     //AsyncTask<doInBackground()의 변수 종류, onProgressUpdate()에서 사용할 변수 종류, onPostExecute()에서 사용할 변수종류>
     private class ConnetingTask extends AsyncTask<HashMap<String, String>, Void, Document> {
 
-        ProgressBar progressBar = new ProgressBar(getActivity());
-
         @Override
         protected void onPreExecute() {
-            progressBar.setVisibility(ConstraintLayout.VISIBLE);
+            progressBar.setVisibility(ProgressBar.VISIBLE);
+            Log.d("###BP::", "progressBar visible set");
         }
 
         @Override
         protected Document doInBackground(HashMap... args) {
+
+            Log.d("###BP:::", "in doInBackground / progressbar visiblity=" + progressBar.getVisibility());
 
             HashMap param = args[0];
 
@@ -312,22 +401,19 @@ public class SearchActivity extends Fragment {
             try {
                 doc = conn.data(param).get();
 
-
-
-                //Log.d("###BP", "");
-
             } catch (Exception e) {
                 Log.e("###ConnetingTask Err::", e.toString());
             }
+
+
 
             return doc;
         }
 
         @Override
         protected void onPostExecute(Document doc) {
-            progressBar.setVisibility(ConstraintLayout.GONE);
 
-            super.onPostExecute(doc);
+            progressBar.setVisibility(ProgressBar.GONE);
         }
     }
 }
