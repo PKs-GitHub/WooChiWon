@@ -1,4 +1,4 @@
-package com.netple.woochiwon.Activity;
+package com.netple.woochiwon.Activity.Common;
 
 import android.graphics.Point;
 import android.os.Bundle;
@@ -16,6 +16,11 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.android.material.snackbar.Snackbar;
+import com.netple.woochiwon.Activity.Account.MyAccountActivity;
+import com.netple.woochiwon.Activity.Board.BoardActivity;
+import com.netple.woochiwon.Activity.Account.AccountActivity;
+import com.netple.woochiwon.Activity.Search.SearchActivity;
+import com.netple.woochiwon.Activity.Timeline.TimelineActivity;
 import com.netple.woochiwon.GeneralClass.NetworkStatus;
 import com.netple.woochiwon.R;
 
@@ -28,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     final Fragment fragment1 = TimelineActivity.newInstance();
     final Fragment fragment2 = SearchActivity.newInstance();
     final Fragment fragment3 = BoardActivity.newInstance();
-    final Fragment fragment4 = LoginActivity.newInstance();
+    final Fragment fragment4 = AccountActivity.newInstance();
     final Fragment fragment5 = MyAccountActivity.newInstance();
 
     public int ScreenWidth;

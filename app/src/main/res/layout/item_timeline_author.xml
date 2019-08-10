@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/timeline_frame"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:background="#FFFFFF"
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginBottom="5dp"
+        android:background="#E9E8E8" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentLeft="false"
+        android:layout_centerVertical="false"
+        android:background="@drawable/border_bottom"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/kinderinfo_avatar"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                tools:srcCompat="@drawable/kakao_default_profile_image" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:paddingTop="5dp"
+            android:weightSum="10">
+
+            <TextView
+                android:id="@+id/kinderinfo_nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:text="Nickname" />
+
+            <TextView
+                android:id="@+id/kinderinfo_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="7"
+                android:text="Location" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

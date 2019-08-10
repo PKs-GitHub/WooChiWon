@@ -1,4 +1,4 @@
-package com.netple.woochiwon.Activity;
+package com.netple.woochiwon.Activity.Account;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,19 +11,11 @@ import androidx.fragment.app.Fragment;
 
 import com.netple.woochiwon.R;
 
-public class MyAccountActivity extends Fragment {
-    public static MyAccountActivity newInstance() {
-        return new MyAccountActivity();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
+public class SignupActivity extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_search, container, false);
+        return inflater.inflate(R.layout.activity_signup, container, false);
     }
+
 }

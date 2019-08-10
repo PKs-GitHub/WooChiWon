@@ -1,4 +1,4 @@
-package com.netple.woochiwon.Activity;
+package com.netple.woochiwon.Activity.Account;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -18,11 +18,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.netple.woochiwon.Activity.Common.MainActivity;
 import com.netple.woochiwon.R;
 
 import java.security.MessageDigest;
 
-public class LoginActivity extends Fragment  implements MainActivity.OnBackPressedListener {
+public class AccountActivity extends Fragment implements MainActivity.OnBackPressedListener {
 
     /**********************************************************
      * [START] Var Area
@@ -42,8 +43,8 @@ public class LoginActivity extends Fragment  implements MainActivity.OnBackPress
      * [END] Var Area
      **********************************************************/
 
-    public static LoginActivity newInstance(){
-        return new LoginActivity();
+    public static AccountActivity newInstance(){
+        return new AccountActivity();
     }
 
     @Override

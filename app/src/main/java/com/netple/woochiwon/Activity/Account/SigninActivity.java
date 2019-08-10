@@ -1,4 +1,4 @@
-package com.netple.woochiwon.Activity;
+package com.netple.woochiwon.Activity.Account;
 
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +30,7 @@ import com.kakao.usermgmt.UserManagement;
 import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
+import com.netple.woochiwon.Activity.Common.MainActivity;
 import com.netple.woochiwon.R;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
@@ -44,7 +45,7 @@ import java.net.URL;
 
 
 public  class SigninActivity extends Fragment {
-    public LoginActivity parentFragment;
+    public AccountActivity parentFragment;
 
     private Button email_loginbtn;
     private TextView signup_link;
@@ -72,7 +73,7 @@ public  class SigninActivity extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        parentFragment = (LoginActivity) SigninActivity.this.getParentFragment();
+        parentFragment = (AccountActivity) SigninActivity.this.getParentFragment();
 
 
 

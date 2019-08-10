@@ -1,4 +1,4 @@
-package com.netple.woochiwon.Activity;
+package com.netple.woochiwon.Activity.Timeline;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -74,16 +74,6 @@ public class TimelineActivity extends Fragment {
     //get timeline items from DB
     public void load_timeline_items() {
 
-
-        /*private int timeline_avatar_resId;             //private ImageView avatar
-        private String timeline_nickname;               //private TextView nickname
-        private String timeline_location;               //private TextView location
-        private String timeline_written_time;          //private TextView written_time
-
-        private String timeline_title;                  //private TextView title
-        private int timeline_content_img_resId;      //private ImageView content_img
-        private String timeline_content_txt;           //private TextView content_txt*/
-
         ArrayList<Integer> timeline_avatar_resId_arr_list = new ArrayList<>();
         ArrayList<String> timeline_nickname_arr_list = new ArrayList<>();
         ArrayList<String> timeline_location_arr_list = new ArrayList<>();
@@ -97,38 +87,44 @@ public class TimelineActivity extends Fragment {
         timeline_avatar_resId_arr_list.add(R.drawable.kakao_default_profile_image);
         timeline_avatar_resId_arr_list.add(R.drawable.kakao_default_profile_image);
         timeline_avatar_resId_arr_list.add(R.drawable.kakao_default_profile_image);
+        timeline_avatar_resId_arr_list.add(R.drawable.kakao_default_profile_image);
 
-        timeline_nickname_arr_list.add("ABC");
-        timeline_nickname_arr_list.add("DEF");
-        timeline_nickname_arr_list.add("TTT");
-        timeline_nickname_arr_list.add("GHI");
+        timeline_nickname_arr_list.add("A유치원");
+        timeline_nickname_arr_list.add("B유치원");
+        timeline_nickname_arr_list.add("C유치원");
+        timeline_nickname_arr_list.add("D유치원");
+        timeline_nickname_arr_list.add("A유치원");
 
-        timeline_location_arr_list.add("AAA BBB CCC");
-        timeline_location_arr_list.add("AAA BBB DDD");
-        timeline_location_arr_list.add("TTT");
-        timeline_location_arr_list.add("AAA ZZZ XXX");
+        timeline_location_arr_list.add("A시 A구 A로");
+        timeline_location_arr_list.add("B시 B구 A로");
+        timeline_location_arr_list.add("C시 C구 B로");
+        timeline_location_arr_list.add("D시 D구 B로");
+        timeline_location_arr_list.add("A시 A구 A로");
+
+
+        timeline_title_arr_list.add("샘플5");
+        timeline_title_arr_list.add("샘플4");
+        timeline_title_arr_list.add("샘플3 (No Image)");
+        timeline_title_arr_list.add("샘플2");
+        timeline_title_arr_list.add("샘플1");
 
         timeline_written_time_arr_list.add("YYYY MM DD hh:mm");
         timeline_written_time_arr_list.add("YYYY MM DD hh:mm");
         timeline_written_time_arr_list.add("YYYY MM DD hh:mm");
         timeline_written_time_arr_list.add("YYYY MM DD hh:mm");
-
-
-        timeline_title_arr_list.add("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-        timeline_title_arr_list.add("BBBBBBBBBBBBB");
-        timeline_title_arr_list.add("T_T");
-        timeline_title_arr_list.add("CCCCCCCCCCCCC");
+        timeline_written_time_arr_list.add("YYYY MM DD hh:mm");
 
         timeline_content_img_resId_arr_list.add(R.mipmap.testimg1);
         timeline_content_img_resId_arr_list.add(R.mipmap.testimg2);
         timeline_content_img_resId_arr_list.add(0);
         timeline_content_img_resId_arr_list.add(R.mipmap.testimg3);
+        timeline_content_img_resId_arr_list.add(R.mipmap.testimg2);
 
-
-        timeline_content_txt_arr_list.add("Hi");
-        timeline_content_txt_arr_list.add("Hello");
-        timeline_content_txt_arr_list.add("QQ");
-        timeline_content_txt_arr_list.add("Coooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooool");
+        timeline_content_txt_arr_list.add("테스트5");
+        timeline_content_txt_arr_list.add("테스트4");
+        timeline_content_txt_arr_list.add("테스트3");
+        timeline_content_txt_arr_list.add("테스트2");
+        timeline_content_txt_arr_list.add("테스트1");
 
         for(int i=0; i<timeline_avatar_resId_arr_list.size(); i++) {
 
@@ -177,14 +173,12 @@ public class TimelineActivity extends Fragment {
 
         class ItemViewHolder extends RecyclerView.ViewHolder {
 
-            private LinearLayout whole_container;
-
             private ImageView avatar;
             private TextView nickname;
             private TextView location;
-            private TextView written_time;
 
             private TextView title;
+            private TextView written_time;
             private LinearLayout content_img_container;
             private LinearLayout.LayoutParams layoutParams;
             private ImageView content_img;
@@ -194,13 +188,12 @@ public class TimelineActivity extends Fragment {
 
                 super(itemView);
 
-                avatar = itemView.findViewById(R.id.timeline_avatar);
-                nickname = itemView.findViewById(R.id.timeline_nickname);
-                location = itemView.findViewById(R.id.timeline_location);
-                written_time = itemView.findViewById(R.id.timeline_written_time);
+                avatar = itemView.findViewById(R.id.kinderinfo_avatar);
+                nickname = itemView.findViewById(R.id.kinderinfo_nickname);
+                location = itemView.findViewById(R.id.kinderinfo_location);
 
                 title = itemView.findViewById(R.id.timeline_title);
-
+                written_time = itemView.findViewById(R.id.timeline_written_time);
                 content_img_container = itemView.findViewById(R.id.timeline_content_img_container);
                 layoutParams = (LinearLayout.LayoutParams) content_img_container.getLayoutParams();
 
@@ -212,16 +205,13 @@ public class TimelineActivity extends Fragment {
                 avatar.setImageResource(item.get_timeline_avatar_resId());
                 nickname.setText(item.get_timeline_nickname());
                 location.setText(item.get_timeline_location());
-                written_time.setText(item.get_timeline_written_time());
+
 
                 title.setText(item.get_timeline_title());
+                written_time.setText(item.get_timeline_written_time());
                 content_txt.setText(item.get_timeline_content_txt());
 
-                /*
-                if (item.get_timeline_content_img_resId() == 0)
-                    content_img.setVisibility(View.GONE);
-                */
-
+                //본문 중 이미지 있을 때
                 if (item.get_timeline_content_img_resId() != 0) {
 
                     Glide.with(content_img.getContext()).load("").placeholder(item.get_timeline_content_img_resId()).into(content_img);

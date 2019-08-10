@@ -1,4 +1,4 @@
-package com.netple.woochiwon.Activity;
+package com.netple.woochiwon.Activity.Board;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

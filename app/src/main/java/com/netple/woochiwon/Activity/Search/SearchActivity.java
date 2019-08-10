@@ -1,5 +1,8 @@
-package com.netple.woochiwon.Activity;
+package com.netple.woochiwon.Activity.Search;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,14 +14,19 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
+import com.netple.woochiwon.Activity.Common.MainActivity;
 import com.netple.woochiwon.DataType.LocationCode;
 import com.netple.woochiwon.DataType.toGSON_basicInfo;
 import com.netple.woochiwon.DataType.toGSON_findSggRoList;
@@ -47,19 +55,20 @@ import javax.net.ssl.X509TrustManager;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
-public class SearchActivity extends Fragment {
+public class SearchActivity extends Fragment implements MainActivity.OnBackPressedListener{
+
+    private FragmentManager fragmentManager;
+    private FragmentTransaction fragmentTransaction;
 
     private SearchActivity searchActivity = this;
     private InputMethodManager imm;
 
-    private ProgressBar progressBar;
-
     private EditText searchEdittext;
-
     private Spinner sidoSpinner, sggSpinner, roSpinner;
-
     private Button searchbtn;
 
+    private RecyclerView recyclerView;
+    private RecyclerAdapter recyclerAdapter;
 
 
     private final static ArrayList<String> SIDO_list = new ArrayList<>(
@@ -86,8 +95,6 @@ public class SearchActivity extends Fragment {
 
         //set progressbar
 
-
-
     }
 
     @Nullable
@@ -96,7 +103,6 @@ public class SearchActivity extends Fragment {
 
         View rootView = inflater.inflate(R.layout.activity_search, container, false);
 
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
 
         searchEdittext = (EditText) rootView.findViewById(R.id.searchfield);
         searchEdittext.setFocusableInTouchMode(true);
@@ -106,6 +112,7 @@ public class SearchActivity extends Fragment {
         roSpinner = (Spinner) rootView.findViewById(R.id.ro_spinner);
 
         searchbtn = (Button) rootView.findViewById(R.id.search_btn);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.RecyclerView_search_item);
 
         return rootView;
     }
@@ -113,6 +120,10 @@ public class SearchActivity extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(linearLayoutManager);
+
 
         searchEdittext.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -132,7 +143,10 @@ public class SearchActivity extends Fragment {
         searchbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 getKinderList();
+
+                load_search_items();
             }
         });
 
@@ -187,9 +201,7 @@ public class SearchActivity extends Fragment {
         roSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-
                 //do nothing
-
             }
 
             @Override
@@ -197,12 +209,50 @@ public class SearchActivity extends Fragment {
 
             }
         });
-
-
-        //get Kinder informaion from web
-        //getKinderList();
-
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        ( (MainActivity) context).setOnBackPressedListener(this);
+    }
+
+    @Override
+    public void onBack() {
+
+        fragmentManager = getChildFragmentManager();
+
+        if(fragmentManager.getBackStackEntryCount() == 2) {
+            Log.d("###Back Btn::", "clicked in signup");
+
+            AlertDialog.Builder alt_bld = new AlertDialog.Builder(getActivity());
+            alt_bld.setMessage("clicked in SearchActivity").setCancelable(
+                    false).setPositiveButton("네!",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // Action for 'Yes' Button
+                            fragmentManager.popBackStack();
+                        }
+                    }).setNegativeButton("아니요!",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // Action for 'NO' Button
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog alert = alt_bld.create();
+            alert.show();
+        }
+
+        else {
+            MainActivity activity = (MainActivity) getActivity();
+            activity.setOnBackPressedListener(null);
+            activity.onBackPressed();
+        }
+    }
+
 
 
     public void setSGGList() {
@@ -319,9 +369,32 @@ public class SearchActivity extends Fragment {
 
         kinderInfo_list = new ArrayList<>();
 
+        //String SIDOcode = locationCode.getSIDOcode(sidoSpinner.getSelectedItem().toString());
         String SIDOcode = locationCode.getSIDOcode(sidoSpinner.getSelectedItem().toString());
-        String SGGcode = locationCode.getSGGcode(sggSpinner.getSelectedItem().toString());
+        String SGGcode = "";
+        String ROname = "";
 
+        //전체 시도 -> 전체 구
+        if(SIDOcode.indexOf("99") >= 0) {
+
+            for(int i=1; i<SGG_list.size(); i++) {
+                SGGcode = locationCode.getSGGcode(sggSpinner.getSelectedItem().toString());
+
+
+            }
+        }
+        else
+            SGGcode = locationCode.getSGGcode(sggSpinner.getSelectedItem().toString());
+
+        //전체 시도 or 전체 구 --> 전체 로
+        if(SIDOcode.indexOf("99") >= 0 || SGGcode.indexOf("99999") >= 0)
+            ROname = "전체";
+        else {
+            if(roSpinner.getSelectedItemPosition() >= 0)
+                ROname = roSpinner.getSelectedItem().toString();
+            else
+                ROname = "전체";
+        }
 
         Document doc;
 
@@ -337,8 +410,20 @@ public class SearchActivity extends Fragment {
 
             toGSON_basicInfo toGSON_basicInfo = new Gson().fromJson(doc.text(), toGSON_basicInfo.class);
 
-            for(toGSON_basicInfo.basicInfo data: toGSON_basicInfo.getbasicInfo())
-                kinderInfo_list.add(data);
+            for(toGSON_basicInfo.basicInfo data: toGSON_basicInfo.getbasicInfo()) {
+
+                //구 전체 or 로 전체
+                if(ROname.indexOf("전체") >= 0) {
+                    kinderInfo_list.add(data);
+                }
+
+                //특정 로
+                else {
+                    //주소에 해당 로 포함된 data만 list에 추가
+                    if(data.getaddr().indexOf(ROname) >= 0)
+                        kinderInfo_list.add(data);
+                }
+            }
 
             Log.d("###BP", "");
 
@@ -347,37 +432,17 @@ public class SearchActivity extends Fragment {
         }
     }
 
-    /*
-    public void init_SIDOspinner() {
-
-        SIDOlist = new ArrayList<>(
-                Arrays.asList("전체", "서울특별시", "부산광역시", "대구광역시", "인천광역시", "광주광역시", "대전광역시", "울산광역시", "세종특별자치시", "경기도", "강원도"
-                ,"충청북도", "충청남도", "전라북도", "전라남도", "경상북도", "경상남도", "제주특별자치도")
-        );
-
-        Collections.sort(SIDOlist);
-    }
-    */
-
-
-
-    /*************************************************
-     * [END] Jsoup Crawling
-     *************************************************/
 
     //AsyncTask<doInBackground()의 변수 종류, onProgressUpdate()에서 사용할 변수 종류, onPostExecute()에서 사용할 변수종류>
     private class ConnetingTask extends AsyncTask<HashMap<String, String>, Void, Document> {
 
         @Override
         protected void onPreExecute() {
-            progressBar.setVisibility(ProgressBar.VISIBLE);
-            Log.d("###BP::", "progressBar visible set");
+            //TODO: ProgressBar Visible
         }
 
         @Override
         protected Document doInBackground(HashMap... args) {
-
-            Log.d("###BP:::", "in doInBackground / progressbar visiblity=" + progressBar.getVisibility());
 
             HashMap param = args[0];
 
@@ -407,10 +472,121 @@ public class SearchActivity extends Fragment {
 
         @Override
         protected void onPostExecute(Document doc) {
-
-            progressBar.setVisibility(ProgressBar.GONE);
+            //TODO: ProgressBar GONE
         }
     }
+
+    /*************************************************
+     * [END] Jsoup Crawling
+     *************************************************/
+
+
+
+    /*************************************************
+     * [START] Set Search Result RecyclerView - recyclerView (= R.id.RecyclerView_search_item)
+     *************************************************/
+    class SearchKinderItem {
+        String kindername;  //유치원명
+        String addr; //주소
+        String establish; //설립유형
+        String opertime; //운영시간
+
+        SearchKinderItem(String kindername, String addr, String establish, String opertime) {
+            this.kindername = kindername;
+            this.addr = addr;
+            this.establish = establish;
+            this.opertime = opertime;
+        }
+
+        String getkindername() { return this.kindername; }
+        String getaddr() { return this.addr; }
+        String getestablish() { return establish; }
+        String getopertime() { return  opertime; }
+    }
+
+
+    //검색된 유치원 리스트 recyclerview item 형태로 추가
+    public void load_search_items() {
+
+        recyclerAdapter = new RecyclerAdapter();
+        recyclerView.setAdapter(recyclerAdapter);
+
+        if(kinderInfo_list.size() > 0) {
+            for(toGSON_basicInfo.basicInfo info : kinderInfo_list) {
+
+                SearchKinderItem item = new SearchKinderItem(info.getkindername(), info.getaddr(), info.getestablish(), info.getopertime());
+
+                recyclerAdapter.addItem(item);
+            }
+        }
+
+        else {
+            //TODO: "해당하는 결과가 없습니다"
+        }
+
+        recyclerAdapter.notifyDataSetChanged();
+
+    }
+
+    private class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ItemViewHolder> {
+
+        private ArrayList<SearchKinderItem> item_arr_list = new ArrayList<>();
+
+        @NonNull
+        @Override
+        public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_searchkinder, parent, false);
+
+            return new ItemViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+            holder.onBind(item_arr_list.get(position));
+        }
+
+        public int getItemCount() {
+            return item_arr_list.size();
+        }
+
+        void addItem(SearchKinderItem item) {
+            item_arr_list.add(item);
+        }
+
+        class ItemViewHolder extends RecyclerView.ViewHolder {
+
+            private TextView kindername;  //유치원명
+            private TextView addr; //주소
+            private TextView establish; //설립유형
+            private TextView opertime; //운영시간
+
+            ItemViewHolder(View itemView) {
+
+                super(itemView);
+
+                kindername = itemView.findViewById(R.id.kindername);
+                addr = itemView.findViewById(R.id.addr);
+                establish = itemView.findViewById(R.id.establish);
+                opertime = itemView.findViewById(R.id.opertime);
+            }
+
+            void onBind(SearchKinderItem item) {
+
+                kindername.setText(item.getkindername());
+                addr.setText(item.getaddr());
+                establish.setText(item.getestablish());
+                opertime.setText(item.getopertime());
+            }
+        }
+    }
+
+
+
+
+    /*************************************************
+     * [END] Set Search Result RecyclerView - recyclerView (= R.id.RecyclerView_search_item)
+     *************************************************/
 }
 
 

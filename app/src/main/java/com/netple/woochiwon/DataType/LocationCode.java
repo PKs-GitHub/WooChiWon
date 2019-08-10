@@ -28,6 +28,7 @@ public class LocationCode {
 
     public static final HashMap<String, String> SGGcode = new HashMap<>();
     static {
+        SGGcode.put("전체", "99");
         //서울특별시
         SGGcode.put("중구", "11140");
         SGGcode.put("영등포구", "11560");

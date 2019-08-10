@@ -31,7 +31,7 @@
                 android:layout_weight="1">
 
                 <ImageView
-                    android:id="@+id/timeline_avatar"
+                    android:id="@+id/kinderinfo_avatar"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_gravity="center"
@@ -49,27 +49,19 @@
                 android:weightSum="10">
 
                 <TextView
-                    android:id="@+id/timeline_nickname"
+                    android:id="@+id/kinderinfo_nickname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:text="Nickname" />
 
                 <TextView
-                    android:id="@+id/timeline_location"
+                    android:id="@+id/kinderinfo_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="7"
                     android:text="Location" />
 
-                <TextView
-                    android:id="@+id/timeline_written_time"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1"
-                    android:text="Written_Time" />
             </LinearLayout>
 
         </LinearLayout>
@@ -95,18 +87,10 @@
                 android:text="Wednesday" />
         </com.google.android.material.tabs.TabLayout>
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.viewpager.widget.ViewPager
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/RecyclerView_kinderpage_item"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fastScrollEnabled="true" />
-
-        </androidx.core.widget.NestedScrollView>
+            android:background="#FFFFFF" />
 
     </LinearLayout>
 
