@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -88,21 +91,22 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("@@@onCreate", "");
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
 
         //Soft keyboard auto on/off control
         imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
-
-        //set progressbar
-
     }
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.activity_search, container, false);
+        Log.d("@@@onCreateView", "");
 
+        View rootView = inflater.inflate(R.layout.activity_search, container, false);
 
         searchEdittext = (EditText) rootView.findViewById(R.id.searchfield);
         searchEdittext.setFocusableInTouchMode(true);
@@ -112,7 +116,10 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         roSpinner = (Spinner) rootView.findViewById(R.id.ro_spinner);
 
         searchbtn = (Button) rootView.findViewById(R.id.search_btn);
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.RecyclerView_search_item);
+
+
 
         return rootView;
     }
@@ -120,6 +127,8 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        Log.d("@@@onViewCreated", "");
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -141,14 +150,33 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         });
 
         searchbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+             @Override
+             public void onClick(View view) {
 
-                getKinderList();
+                 Log.d("@@@onClick", "");
 
-                load_search_items();
-            }
-        });
+
+                 try {
+
+                     Thread workingThread = new Thread(new Runnable() {
+                         @Override
+                         public void run() {
+                             getKinderList();
+                         }
+                     });
+
+                    workingThread.start();
+
+                    workingThread.join();
+
+                 } catch (Exception e) {
+                     Log.e("###searchbtn Err::", e.getMessage());
+                 }
+
+                 //load_search_items();
+             }
+         });
+
 
 
         sidoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -215,6 +243,8 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
     public void onAttach(Context context) {
         super.onAttach(context);
 
+        Log.d("@@@onAttach", "");
+
         ( (MainActivity) context).setOnBackPressedListener(this);
     }
 
@@ -254,7 +284,6 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
     }
 
 
-
     public void setSGGList() {
 
         SGG_list = new ArrayList<>();
@@ -266,12 +295,12 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         Document doc;
         Gson gson = new Gson();
 
-        HashMap<String, String> dataParams = new HashMap<>();
-        dataParams.put("URL", URL);
+        HashMap<String, String> urlParam = new HashMap<>();
+        urlParam.put("URL", URL);
 
         try {
             //get data from web thread start
-            doc = new ConnetingTask().execute(dataParams).get();
+            doc = new ConnetingTask().execute(urlParam).get();
 
             toGSON_findSggRoList[] SGGarr = gson.fromJson(doc.text(), toGSON_findSggRoList[].class);
 
@@ -303,13 +332,15 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         Document doc;
         Gson gson = new Gson();
 
+        HashMap<String, String> urlParam = new HashMap<>();
         HashMap<String, String> dataParams = new HashMap<>();
-        dataParams.put("URL", URL);
+
+        urlParam.put("URL", URL);
         dataParams.put("sisggNm", selected_SIDOname + selected_SGGname);
 
         try {
             //get data from web thread start
-            doc = new ConnetingTask().execute(dataParams).get();
+            doc = new ConnetingTask().execute(urlParam, dataParams).get();
 
             toGSON_findSggRoList[] Roarr = gson.fromJson(doc.text(), toGSON_findSggRoList[].class);
 
@@ -374,63 +405,120 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         String SGGcode = "";
         String ROname = "";
 
-        //전체 시도 -> 전체 구
-        if(SIDOcode.indexOf("99") >= 0) {
-
-            for(int i=1; i<SGG_list.size(); i++) {
-                SGGcode = locationCode.getSGGcode(sggSpinner.getSelectedItem().toString());
-
-
-            }
-        }
-        else
-            SGGcode = locationCode.getSGGcode(sggSpinner.getSelectedItem().toString());
-
-        //전체 시도 or 전체 구 --> 전체 로
-        if(SIDOcode.indexOf("99") >= 0 || SGGcode.indexOf("99999") >= 0)
-            ROname = "전체";
-        else {
-            if(roSpinner.getSelectedItemPosition() >= 0)
-                ROname = roSpinner.getSelectedItem().toString();
-            else
-                ROname = "전체";
-        }
-
-        Document doc;
-
+        HashMap<String, String> urlParam = new HashMap<>();
         HashMap<String, String> dataParams = new HashMap<>();
-        dataParams.put("URL", "http://e-childschoolinfo.moe.go.kr/api/notice/basicInfo.do");
+
+        urlParam.put("URL", "http://e-childschoolinfo.moe.go.kr/api/notice/basicInfo.do");
         dataParams.put("key", kinder_key);
         dataParams.put("sidoCode", SIDOcode);
-        dataParams.put("sggCode", SGGcode);
+        dataParams.put("sggCode", "99999"); //99999 임시값
 
-        try {
-            //get data from web thread start
-            doc = new ConnetingTask().execute(dataParams).get();
 
-            toGSON_basicInfo toGSON_basicInfo = new Gson().fromJson(doc.text(), toGSON_basicInfo.class);
+        //전체 시도 -> 전체 구
 
-            for(toGSON_basicInfo.basicInfo data: toGSON_basicInfo.getbasicInfo()) {
+        if(SIDOcode.indexOf("99") >= 0) {
+            this.handler.sendMessage(Message.obtain(handler, 1));
+        }
+        /*
+        if(SIDOcode.indexOf("99") >= 0) {
 
-                //구 전체 or 로 전체
-                if(ROname.indexOf("전체") >= 0) {
-                    kinderInfo_list.add(data);
+            SGG_list = new ArrayList<String>(l6ocationCode.SGGcode.values());
+            Collections.sort(SGG_list);
+
+            for(int i=0; i<SGG_list.size(); i++) {
+                SGGcode = SGG_list.get(i);
+                dataParams.remove("sggCode");
+                dataParams.put("sggCode", SGGcode);
+
+                try {
+                    //get data from web thread start
+                    doc = new ConnetingTask().execute(dataParams).get();
+
+                    toGSON_basicInfo toGSON_basicInfo = new Gson().fromJson(doc.text(), toGSON_basicInfo.class);
+
+                    for(toGSON_basicInfo.basicInfo data: toGSON_basicInfo.getbasicInfo())
+                        kinderInfo_list.add(data);
+
+                } catch (Exception e) {
+                    Log.e("###getKinderList Err::", e.toString());
                 }
+            }
+        }
+        */
+        //특정 시도
+        else {
+            //전체 구
+            if(sggSpinner.getSelectedItem().toString().indexOf("전체") >= 0) {
+
+                for(int i=1; i<sggSpinner.getCount(); i++) {
+                    SGGcode = locationCode.getSGGcode(sggSpinner.getItemAtPosition(i).toString());
+                    dataParams.remove("sggCode");
+                    dataParams.put("sggCode", SGGcode);
+
+                    try {
+                        Document doc = new ConnetingTask().execute(urlParam, dataParams).get();
+
+                        toGSON_basicInfo toGSON_basicInfo = new Gson().fromJson(doc.text(), toGSON_basicInfo.class);
+
+                        for(toGSON_basicInfo.basicInfo data: toGSON_basicInfo.getbasicInfo())
+                            kinderInfo_list.add(data);
+
+                    } catch (Exception e) {
+                        Log.e("###getKinderList Err::", e.toString());
+                    }
+                }
+            }
+
+            //특정 구
+            else {
+                //전체 로
+                if(roSpinner.getSelectedItem().toString().indexOf("전체") >= 0) {
+                    SGGcode = locationCode.getSGGcode(sggSpinner.getSelectedItem().toString());
+                    dataParams.remove("sggCode");
+                    dataParams.put("sggCode", SGGcode);
+
+                    try {
+                        //get data from web thread start
+                        Document doc = new ConnetingTask().execute(urlParam, dataParams).get();
+
+                        toGSON_basicInfo toGSON_basicInfo = new Gson().fromJson(doc.text(), toGSON_basicInfo.class);
+
+                        for(toGSON_basicInfo.basicInfo data: toGSON_basicInfo.getbasicInfo())
+                            kinderInfo_list.add(data);
+
+                    } catch (Exception e) {
+                        Log.e("###getKinderList Err::", e.toString());
+                    }
+                }
+
 
                 //특정 로
                 else {
-                    //주소에 해당 로 포함된 data만 list에 추가
-                    if(data.getaddr().indexOf(ROname) >= 0)
-                        kinderInfo_list.add(data);
+                    ROname = roSpinner.getSelectedItem().toString();
+
+                    SGGcode = locationCode.getSGGcode(sggSpinner.getSelectedItem().toString());
+                    dataParams.remove("sggCode");
+                    dataParams.put("sggCode", SGGcode);
+
+                    try {
+                        //get data from web thread start
+                        Document doc = new ConnetingTask().execute(urlParam, dataParams).get();
+
+                        toGSON_basicInfo toGSON_basicInfo = new Gson().fromJson(doc.text(), toGSON_basicInfo.class);
+
+                        for(toGSON_basicInfo.basicInfo data: toGSON_basicInfo.getbasicInfo()) {
+                            if(data.getaddr().indexOf(ROname) >= 0)
+                                kinderInfo_list.add(data);
+                        }
+                    } catch (Exception e) {
+                        Log.e("###getKinderList Err::", e.toString());
+                    }
                 }
             }
-
-            Log.d("###BP", "");
-
-        } catch (Exception e) {
-            Log.e("###getKinderList Err::", e.toString());
         }
     }
+
+
 
 
     //AsyncTask<doInBackground()의 변수 종류, onProgressUpdate()에서 사용할 변수 종류, onPostExecute()에서 사용할 변수종류>
@@ -438,28 +526,38 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
         @Override
         protected void onPreExecute() {
+            super.onPreExecute();
+
             //TODO: ProgressBar Visible
         }
 
         @Override
         protected Document doInBackground(HashMap... args) {
 
-            HashMap param = args[0];
+            HashMap urlParam = args[0];
+            HashMap dataParams = null;
+
+            if(args.length > 1)
+                dataParams = args[1];
 
             Document doc = null;
 
             Connection conn = Jsoup
-                    .connect((String) param.get("URL"))
+                    .connect((String) urlParam.get("URL"))
                     .header("Content-Type", "application/json;charset=UTF-8")
                     .userAgent(USER_AGENT)
                     .method(Connection.Method.GET)
                     .ignoreContentType(true)
                     .timeout(5000);
 
-            param.remove("URL");
-
             try {
-                doc = conn.data(param).get();
+                if(dataParams != null)
+                    doc = conn.data(dataParams).get();
+
+                else
+                    doc = conn.get();
+
+                Log.d("###BP", "");
 
             } catch (Exception e) {
                 Log.e("###ConnetingTask Err::", e.toString());
@@ -472,6 +570,8 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
         @Override
         protected void onPostExecute(Document doc) {
+            super.onPostExecute(doc);
+
             //TODO: ProgressBar GONE
         }
     }
@@ -581,12 +681,21 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         }
     }
 
-
-
-
     /*************************************************
      * [END] Set Search Result RecyclerView - recyclerView (= R.id.RecyclerView_search_item)
      *************************************************/
+
+    Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1:
+                    Toast.makeText(getActivity(), "시/도를 먼저 선택해주세요", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+    };
+
 }
 
 
@@ -595,7 +704,7 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
 
 /*
-help.wcw@gamil.com
+help.wcw@gmail.com
 
 
 Open API Key: 7ec2f18d1fe74920ab726f1df7eb63f3

@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#FFD22B</color>
+    <color name="colorPrimaryDark">#FFA217</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="bottomnav_primary">#FFFFF9D7</color>
-    <color name="bottomnav_secondary">#FFFFF59E</color>
+    <color name="bottomnav_primary">#7C7C7C</color>
+    <color name="bottomnav_secondary">#252525</color>
 
-    //used in progress.xml
-    <color name="color_preloader_start">#000000</color>
-    <color name="color_preloader_center">#000000</color>
-    <color name="color_preloader_end">#ff56a9c7</color>
 </resources>

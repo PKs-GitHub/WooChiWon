@@ -15,13 +15,17 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".Activity.Common.MainActivity">
+        <activity
+            android:name=".Activity.Common.SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".Activity.Common.MainActivity"/>
 
 
         <!-- [START] Kakao 로그인 연동 -->

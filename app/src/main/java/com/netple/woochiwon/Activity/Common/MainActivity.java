@@ -16,15 +16,17 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 import com.google.android.material.snackbar.Snackbar;
+import com.netple.woochiwon.Activity.Account.AccountActivity;
 import com.netple.woochiwon.Activity.Account.MyAccountActivity;
 import com.netple.woochiwon.Activity.Board.BoardActivity;
-import com.netple.woochiwon.Activity.Account.AccountActivity;
 import com.netple.woochiwon.Activity.Search.SearchActivity;
 import com.netple.woochiwon.Activity.Timeline.TimelineActivity;
 import com.netple.woochiwon.GeneralClass.NetworkStatus;
 import com.netple.woochiwon.R;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static MainActivity instance;
 
     private FragmentManager main_FragmentManager;
     private FragmentTransaction main_FragmentTransaction;
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        instance = this;
+
         setContentView(R.layout.activity_main);
 
         //키보드가 UI 가리는 것 방지
@@ -142,27 +147,25 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         // 다른 Fragment 에서 리스너를 설정했을 때 처리됩니다.
-        if(mBackListener != null) {
+        if (mBackListener != null) {
             mBackListener.onBack();
             Log.e("!!!", "Listener is not null");
             // 리스너가 설정되지 않은 상태(예를들어 메인Fragment)라면
             // 뒤로가기 버튼을 연속적으로 두번 눌렀을 때 앱이 종료됩니다.
         } else {
             Log.e("!!!", "Listener is null");
-            if ( pressedTime == 0 ) {
+            if (pressedTime == 0) {
                 Snackbar.make(findViewById(R.id.bottom_navigation),
-                        " 한 번 더 누르면 종료됩니다." , Snackbar.LENGTH_LONG).show();
+                        " 한 번 더 누르면 종료됩니다.", Snackbar.LENGTH_LONG).show();
                 pressedTime = System.currentTimeMillis();
-            }
-            else {
+            } else {
                 int seconds = (int) (System.currentTimeMillis() - pressedTime);
 
-                if ( seconds > 2000 ) {
+                if (seconds > 2000) {
                     Snackbar.make(findViewById(R.id.bottom_navigation),
-                            " 한 번 더 누르면 종료됩니다." , Snackbar.LENGTH_LONG).show();
-                    pressedTime = 0 ;
-                }
-                else {
+                            " 한 번 더 누르면 종료됩니다.", Snackbar.LENGTH_LONG).show();
+                    pressedTime = 0;
+                } else {
                     super.onBackPressed();
                     Log.e("!!!", "onBackPressed : finish, killProcess");
                     finish();
@@ -175,4 +178,7 @@ public class MainActivity extends AppCompatActivity {
      * [END] Custom BackKey Listener
      ****************************************************/
 
+    public static MainActivity getInstance() {
+        return instance;
+    }
 }

@@ -79,16 +79,6 @@
             android:visibility="invisible" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/progressBarLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-    </LinearLayout>
-
     <FrameLayout
         android:id="@+id/activity_search_FrameLayout"
         android:layout_width="match_parent"
