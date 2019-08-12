@@ -8,7 +8,7 @@
         </shape>
     </item>
 
-    <!--Fill Oolor-->
+    <!--Fill Color-->
     <item android:bottom="1dp">
         <shape android:shape="rectangle">
             <solid android:color="#FFFFFF" />
