@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.bottom_nav_menu_1:
                     main_FragmentManager.beginTransaction().hide(active_Fragment).show(fragment1).commit();
                     active_Fragment = fragment1;
+
                     return true;
 
                 case R.id.bottom_nav_menu_2:
@@ -146,13 +147,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        // 다른 Fragment 에서 리스너를 설정했을 때 처리됩니다.
         if (mBackListener != null) {
             mBackListener.onBack();
             Log.e("!!!", "Listener is not null");
             // 리스너가 설정되지 않은 상태(예를들어 메인Fragment)라면
             // 뒤로가기 버튼을 연속적으로 두번 눌렀을 때 앱이 종료됩니다.
-        } else {
+        }
+
+        else {
             Log.e("!!!", "Listener is null");
             if (pressedTime == 0) {
                 Snackbar.make(findViewById(R.id.bottom_navigation),

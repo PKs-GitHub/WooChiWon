@@ -3,8 +3,6 @@ package com.netple.woochiwon.Activity.Search;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -99,7 +98,7 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.d("@@@onCreate", "");
+        Log.d("###onCreate", "");
         super.onCreate(savedInstanceState);
 
         instance = this;
@@ -113,7 +112,7 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        Log.d("@@@onCreateView", "");
+        Log.d("###onCreateView", "");
 
         View rootView = inflater.inflate(R.layout.activity_search, container, false);
 
@@ -128,6 +127,7 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
         progressBar = (ProgressBar) rootView.findViewById(R.id.search_progressBar);
 
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.RecyclerView_search_item);
 
 
@@ -138,7 +138,8 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Log.d("@@@onViewCreated", "");
+        Log.d("###onViewCreated", "");
+
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -162,11 +163,8 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         searchbtn.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View view) {
-                 /*
-                 new searchbtn_AsyncTask().execute();
-                 */
-                 getKinderList();
 
+                 new getKinderList_AsyncTask().execute();
              }
          });
 
@@ -236,7 +234,7 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Log.d("@@@onAttach", "");
+        Log.d("###onAttach", this.toString());
 
         ( (MainActivity) context).setOnBackPressedListener(this);
     }
@@ -411,9 +409,8 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
         //progressBar = instance.getView().findViewById(R.id.search_progressBar);
 
-        progressBar.getProgressDrawable().setColorFilter(
-                getResources().getColor(R.color.com_kakao_brown),
-                PorterDuff.Mode.SRC_IN);
+
+        //progressBar.getProgressDrawable().setColorFilter(Color.parseColor("#00498c"), PorterDuff.Mode.MULTIPLY));
 
         Log.d("###Pro bar Set as::", Integer.toString(progressBar.getVisibility()));
 
@@ -544,12 +541,10 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
             }
         }
 
-        load_search_items();
-
-        progressBar.getProgressDrawable().setColorFilter(
-                getResources().getColor(R.color.colorPrimary),
-                PorterDuff.Mode.SRC_IN);
+        //progressBar.getProgressDrawable().setColorFilter(Color.parseColor("#252525"), PorterDuff.Mode.MULTIPLY);
     }
+
+
 
     //검색된 유치원 리스트 recyclerview item 형태로 추가
     public void load_search_items() {
@@ -716,6 +711,55 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
         return doc;
     }
+
+
+
+
+    class getKinderList_AsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            //Disable any touch on the screen
+            getActivity().getWindow().setFlags(
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.bringToFront();
+            progressBar.invalidate();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            try {
+                getKinderList();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            load_search_items();
+
+            //Enable touch on the screen again
+            getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+            progressBar.setVisibility(View.GONE);
+        }
+    }
+
+
+
+
+
+
+
 
 
     Handler handler = new Handler() {

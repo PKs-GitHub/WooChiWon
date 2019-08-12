@@ -58,6 +58,7 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
     public void onAttach(Context context) {
         super.onAttach(context);
 
+        Log.d("###onAttach", this.toString());
 
         ( (MainActivity) context).setOnBackPressedListener(this);
     }
@@ -106,6 +107,7 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
     public void onBack() {
 
         fragmentManager = getChildFragmentManager();
+
 
         if(fragmentManager.getBackStackEntryCount() == 2) {
             Log.d("###Back Btn::", "clicked in signup");
