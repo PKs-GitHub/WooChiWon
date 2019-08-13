@@ -1,8 +1,6 @@
 package com.netple.woochiwon.Activity.Search;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,6 +47,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -60,12 +59,10 @@ import javax.net.ssl.X509TrustManager;
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
-public class SearchActivity extends Fragment implements MainActivity.OnBackPressedListener{
+public class SearchActivity extends Fragment implements MainActivity.OnBackPressedListener {
 
     public SearchActivity instance;
 
-
-    private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
 
     private SearchActivity searchActivity = this;
@@ -119,9 +116,9 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         searchEdittext = (EditText) rootView.findViewById(R.id.searchfield);
         searchEdittext.setFocusableInTouchMode(true);
 
-        sidoSpinner = (Spinner) rootView.findViewById(R.id.sido_spinner);
-        sggSpinner = (Spinner) rootView.findViewById(R.id.sgg_spinner);
-        roSpinner = (Spinner) rootView.findViewById(R.id.ro_spinner);
+        sidoSpinner = (Spinner) rootView.findViewById(R.id.sidoSpinner);
+        sggSpinner = (Spinner) rootView.findViewById(R.id.sggSpinner);
+        roSpinner = (Spinner) rootView.findViewById(R.id.roSpinner);
 
         searchbtn = (Button) rootView.findViewById(R.id.search_btn);
 
@@ -236,42 +233,44 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
         Log.d("###onAttach", this.toString());
 
-        ( (MainActivity) context).setOnBackPressedListener(this);
+        //( (MainActivity) context).setOnBackPressedListener(this);
     }
 
     @Override
-    public void onBack() {
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getChildFragmentManager();
 
-        fragmentManager = getChildFragmentManager();
+        if (fragmentManager.getBackStackEntryCount() == 1) {
+            fragmentManager.popBackStack();
+        } else {
+            (MainActivity.getInstance()).onBackPressedDefault();
+        }
+    }
 
-        if(fragmentManager.getBackStackEntryCount() == 2) {
-            Log.d("###Back Btn::", "clicked in signup");
 
-            AlertDialog.Builder alt_bld = new AlertDialog.Builder(getActivity());
-            alt_bld.setMessage("clicked in SearchActivity").setCancelable(
-                    false).setPositiveButton("네!",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // Action for 'Yes' Button
-                            fragmentManager.popBackStack();
-                        }
-                    }).setNegativeButton("아니요!",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // Action for 'NO' Button
-                            dialog.cancel();
-                        }
-                    });
+    //Used by web data crawling functions
+    private synchronized Document getJsonData(HashMap...args) {
 
-            AlertDialog alert = alt_bld.create();
-            alert.show();
+        Document doc = null;
+
+        Connection conn = Jsoup
+                .connect((String) args[0].get("URL"))
+                .header("Content-Type", "application/json;charset=UTF-8")
+                .userAgent(USER_AGENT)
+                .method(Connection.Method.GET)
+                .ignoreContentType(true)
+                .timeout(5000);
+
+        try {
+            if(args.length > 1)
+                doc = conn.data(args[1]).get();
+            else
+                doc = conn.get();
+        } catch(Exception e) {
+            Log.e("###getJsonData_Async::", e.getMessage());
         }
 
-        else {
-            MainActivity activity = (MainActivity) getActivity();
-            activity.setOnBackPressedListener(null);
-            activity.onBackPressed();
-        }
+        return doc;
     }
 
 
@@ -364,9 +363,9 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
     }
 
 
-    /*************************************************
-     * [START] Jsoup Crawling
-     *************************************************/
+/*************************************************
+ * [START] Jsoup Crawling
+ *************************************************/
 
     public static void setSSL() throws NoSuchAlgorithmException, KeyManagementException {
 
@@ -405,12 +404,12 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
 
 
-    public void getKinderList() {
+    private void setKinderList() {
 
         //progressBar = instance.getView().findViewById(R.id.search_progressBar);
 
 
-        //progressBar.getProgressDrawable().setColorFilter(Color.parseColor("#00498c"), PorterDuff.Mode.MULTIPLY));
+        //progressBar.getProgressDrawable().setColorFilter(Color.parserColor("#00498c"), PorterDuff.Mode.MULTIPLY));
 
         Log.d("###Pro bar Set as::", Integer.toString(progressBar.getVisibility()));
 
@@ -544,7 +543,9 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         //progressBar.getProgressDrawable().setColorFilter(Color.parseColor("#252525"), PorterDuff.Mode.MULTIPLY);
     }
 
-
+    public List getKinderList() {
+        return kinderInfo_list;
+    }
 
     //검색된 유치원 리스트 recyclerview item 형태로 추가
     public void load_search_items() {
@@ -563,6 +564,8 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
         else {
             //TODO: "해당하는 결과가 없습니다"
+            recyclerView.setAdapter(null);
+            Toast.makeText(getActivity(), "검색결과가 없습니다.", Toast.LENGTH_SHORT).show();
         }
 
         recyclerAdapter.notifyDataSetChanged();
@@ -570,15 +573,15 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
 
 
-    /*************************************************
-     * [END] Jsoup Crawling
-     *************************************************/
+/*************************************************
+ * [END] Jsoup Crawling
+ *************************************************/
 
 
 
-    /*************************************************
-     * [START] Set Search Result RecyclerView - recyclerView (= R.id.RecyclerView_search_item)
-     *************************************************/
+/*************************************************
+ * [START] Set Search Result RecyclerView - recyclerView (= R.id.RecyclerView_search_item)
+ *************************************************/
     class SearchKinderItem {
         String kindername;  //유치원명
         String addr; //주소
@@ -642,6 +645,26 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
                 addr = itemView.findViewById(R.id.addr);
                 establish = itemView.findViewById(R.id.establish);
                 opertime = itemView.findViewById(R.id.opertime);
+
+
+                //유치원 항목 클릭 이벤트
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int pos = getAdapterPosition();
+
+                        if(pos != RecyclerView.NO_POSITION) {
+
+                            SearchKinderItem item = item_arr_list.get(pos);
+
+                            fragmentTransaction = getChildFragmentManager().beginTransaction();
+                            fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
+                            fragmentTransaction.replace(R.id.SearchActivityFrameLayout, new KinderInfoActivity(item.kindername));
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        }
+                    }
+                });
             }
 
             void onBind(SearchKinderItem item) {
@@ -654,9 +677,18 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         }
     }
 
-    /*************************************************
-     * [END] Set Search Result RecyclerView - recyclerView (= R.id.RecyclerView_search_item)
-     *************************************************/
+/*************************************************
+ * [END] Set Search Result RecyclerView - recyclerView (= R.id.RecyclerView_search_item)
+ *************************************************/
+
+
+
+
+
+
+/*************************************************
+ * [START] AsyncTasks
+ *************************************************/
 
     //AsyncTask<doInBackground()의 변수 종류, onProgressUpdate()에서 사용할 변수 종류, onPostExecute()에서 사용할 변수종류>
     private class searchbtn_AsyncTask extends AsyncTask<Void, Void, Void> {
@@ -671,7 +703,7 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         @Override
         protected Void doInBackground(Void... voids) {
 
-            getKinderList();
+            setKinderList();
 
             return null;
         }
@@ -685,31 +717,6 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
             progressBar.setVisibility(View.GONE);
             Log.d("###Pro bar UnSet", Integer.toString(progressBar.getVisibility()));
         }
-    }
-
-    private synchronized Document getJsonData(HashMap...args) {
-
-        Document doc = null;
-
-        Connection conn = Jsoup
-                .connect((String) args[0].get("URL"))
-                .header("Content-Type", "application/json;charset=UTF-8")
-                .userAgent(USER_AGENT)
-                .method(Connection.Method.GET)
-                .ignoreContentType(true)
-                .timeout(5000);
-
-        try {
-            if(args.length > 1)
-                doc = conn.data(args[1]).get();
-            else
-                doc = conn.get();
-        } catch(Exception e) {
-            Log.e("###getJsonData_Async::", e.getMessage());
-        }
-
-
-        return doc;
     }
 
 
@@ -734,7 +741,7 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         protected Void doInBackground(Void... voids) {
 
             try {
-                getKinderList();
+                setKinderList();
             } catch(Exception e) {
                 e.printStackTrace();
             }
@@ -754,12 +761,9 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         }
     }
 
-
-
-
-
-
-
+/*************************************************
+ * [END] AsyncTasks
+ *************************************************/
 
 
     Handler handler = new Handler() {

@@ -1,11 +1,13 @@
 package com.netple.woochiwon.Activity.Common;
 
+import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +26,12 @@ import com.netple.woochiwon.Activity.Timeline.TimelineActivity;
 import com.netple.woochiwon.GeneralClass.NetworkStatus;
 import com.netple.woochiwon.R;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
+
+    private SharedPreferences appData;
+    private String sharedPreferencesData;
 
     private static MainActivity instance;
 
@@ -41,11 +48,16 @@ public class MainActivity extends AppCompatActivity {
     public int ScreenWidth;
     public int ScreenHeight;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         instance = this;
+
+        //앱 설정값 불러오기
+        appData = getSharedPreferences("appData", MODE_PRIVATE);
+        load();
 
         setContentView(R.layout.activity_main);
 
@@ -89,6 +101,8 @@ public class MainActivity extends AppCompatActivity {
         navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
+    public static MainActivity getInstance() { return instance; }
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -124,63 +138,89 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    /*****************************************************
-     * [START] Custom BackKey Listener
-     ****************************************************/
+/*****************************************************
+ * [START] Custom BackKey Listener
+ ****************************************************/
     // 뒤로가기 버튼 입력시간이 담길 long 객체
     private long pressedTime = 0;
 
-    // 리스너 생성
     public interface OnBackPressedListener {
-        public void onBack();
-    }
-
-    // 리스너 객체 생성
-    private OnBackPressedListener mBackListener;
-
-    // 리스너 설정 메소드
-    public void setOnBackPressedListener(OnBackPressedListener listener) {
-        mBackListener = listener;
+        void onBackPressed();
     }
 
     // 뒤로가기 버튼을 눌렀을 때의 오버라이드 메소드
     @Override
     public void onBackPressed() {
 
-        if (mBackListener != null) {
-            mBackListener.onBack();
-            Log.e("!!!", "Listener is not null");
-            // 리스너가 설정되지 않은 상태(예를들어 메인Fragment)라면
-            // 뒤로가기 버튼을 연속적으로 두번 눌렀을 때 앱이 종료됩니다.
-        }
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        if (fragmentList != null) {
+            //TODO: Perform your logic to pass back press here
+            for(Fragment fragment : fragmentList){
+                if(fragment.isVisible()){
+                    ((OnBackPressedListener)fragment).onBackPressed();
 
-        else {
-            Log.e("!!!", "Listener is null");
-            if (pressedTime == 0) {
-                Snackbar.make(findViewById(R.id.bottom_navigation),
-                        " 한 번 더 누르면 종료됩니다.", Snackbar.LENGTH_LONG).show();
-                pressedTime = System.currentTimeMillis();
-            } else {
-                int seconds = (int) (System.currentTimeMillis() - pressedTime);
-
-                if (seconds > 2000) {
-                    Snackbar.make(findViewById(R.id.bottom_navigation),
-                            " 한 번 더 누르면 종료됩니다.", Snackbar.LENGTH_LONG).show();
-                    pressedTime = 0;
-                } else {
-                    super.onBackPressed();
-                    Log.e("!!!", "onBackPressed : finish, killProcess");
-                    finish();
-                    android.os.Process.killProcess(android.os.Process.myPid());
+                    break;
                 }
             }
         }
-    }
-    /*****************************************************
-     * [END] Custom BackKey Listener
-     ****************************************************/
 
-    public static MainActivity getInstance() {
-        return instance;
+        else {
+            onBackPressedDefault();
+        }
     }
+
+    public void onBackPressedDefault() {
+
+        if ( pressedTime == 0 ) {
+            Toast.makeText(getApplicationContext(), "한 번 더 누르면 종료됩니다." , Toast.LENGTH_SHORT).show();
+            pressedTime = System.currentTimeMillis();
+        }
+        else {
+            int seconds = (int) (System.currentTimeMillis() - pressedTime);
+
+            if (seconds > 2000) {
+                Toast.makeText(getApplicationContext(), "한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                pressedTime = 0;
+            } else {
+                super.onBackPressed();
+                Log.e("!!!", "onBackPressed : finish, killProcess");
+                finish();
+                android.os.Process.killProcess(android.os.Process.myPid());
+            }
+        }
+    }
+/*****************************************************
+ * [END] Custom BackKey Listener
+ ****************************************************/
+
+
+/*****************************************************
+ * [START] SharedPreferences Methods
+ ****************************************************/
+
+
+    public void save() {
+        SharedPreferences.Editor editor = appData.edit();
+
+        editor.putString("Key", "Storage Value");
+
+        editor.apply();
+    }
+
+
+
+    public void load() {
+        sharedPreferencesData = appData.getString("Key", "");
+        Log.d("###Data loaded::", sharedPreferencesData);
+    }
+
+
+
+/*****************************************************
+ * [END] Custom BackKey Listener
+ ****************************************************/
+
 }
+
+
+

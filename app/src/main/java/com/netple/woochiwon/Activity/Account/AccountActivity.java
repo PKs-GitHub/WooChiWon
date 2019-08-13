@@ -29,7 +29,7 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
      * [START] Var Area
      **********************************************************/
 
-    private FragmentManager fragmentManager;
+
     private FragmentTransaction fragmentTransaction;
 
     public enum LoginPlatoform {
@@ -60,7 +60,7 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
 
         Log.d("###onAttach", this.toString());
 
-        ( (MainActivity) context).setOnBackPressedListener(this);
+        //( (MainActivity) context).setOnBackPressedListener(this);
     }
 
 
@@ -70,22 +70,14 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
 
         fragmentTransaction = getChildFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
-        fragmentTransaction.replace(R.id.login_fragment_container, new SigninActivity());
+        fragmentTransaction.replace(R.id.login_fragment_container, new SignInActivity());
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
 
         return inflater.inflate(R.layout.activity_login, container, false);
     }
 
-    private void setChildFragment(Fragment child) {
-        FragmentTransaction childFt = getChildFragmentManager().beginTransaction();
 
-        if (!child.isAdded()) {
-            childFt.replace(R.id.login_fragment_container, child);
-            childFt.addToBackStack(null);
-            childFt.commit();
-        }
-    }
 
     /**************************************
      * [START] Email Login Handler
@@ -104,12 +96,13 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
     }
 
     @Override
-    public void onBack() {
+    public void onBackPressed() {
 
-        fragmentManager = getChildFragmentManager();
+        FragmentManager fragmentManager = getChildFragmentManager();
 
-
+        //getBackStackEntryCount() == 2) => in SignupActivity
         if(fragmentManager.getBackStackEntryCount() == 2) {
+
             Log.d("###Back Btn::", "clicked in signup");
 
             AlertDialog.Builder alt_bld = new AlertDialog.Builder(getActivity());
@@ -133,11 +126,10 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
         }
 
         else {
-            MainActivity activity = (MainActivity) getActivity();
-            activity.setOnBackPressedListener(null);
-            activity.onBackPressed();
+            (MainActivity.getInstance()).onBackPressedDefault();
         }
     }
+
 
     /**************************************
      * [END] Email Login Handler

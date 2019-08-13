@@ -2,4 +2,11 @@
 <layer-list
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@android:color/holo_orange_light" />
+    <item
+        android:width="250dp"
+        android:height="130dp"
+        android:gravity="center">
+
+        <bitmap android:src="@mipmap/picto_boy_girl"/>
+    </item>
 </layer-list>

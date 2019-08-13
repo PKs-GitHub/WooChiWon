@@ -50,14 +50,14 @@
             android:weightSum="10">
 
             <TextView
-                android:id="@+id/kinderinfo_nickname"
+                android:id="@+id/kinderinfoName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:text="Nickname" />
 
             <TextView
-                android:id="@+id/kinderinfo_location"
+                android:id="@+id/kinderinfoLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="7"

@@ -44,7 +44,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 
-public  class SigninActivity extends Fragment {
+public  class SignInActivity extends Fragment {
     public AccountActivity parentFragment;
 
     private Button email_loginbtn;
@@ -73,7 +73,7 @@ public  class SigninActivity extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        parentFragment = (AccountActivity) SigninActivity.this.getParentFragment();
+        parentFragment = (AccountActivity) SignInActivity.this.getParentFragment();
 
 
 
@@ -324,7 +324,7 @@ public  class SigninActivity extends Fragment {
                 String tokenType = mOAuthLoginModule.getTokenType(activity);
                 String emailAddress = "";
 
-                String HTTP_response = SigninActivity.HTTP_getUserInfo(tokenType, accessToken);
+                String HTTP_response = SignInActivity.HTTP_getUserInfo(tokenType, accessToken);
                 JSONObject jsonObject = new JSONObject();
 
                 try {

@@ -1,165 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.netple.woochiwon.Activity.Account.AccountActivity"
-    android:orientation="vertical"
+    android:id="@+id/SignInActivityLinearLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    tools:context="com.netple.woochiwon.Activity.Account.AccountActivity">
 
-    <com.google.android.material.textfield.TextInputLayout
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp">
+        android:layout_height="match_parent">
 
-        <EditText
-            android:id="@+id/input_email"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="전화번호 혹은 이메일 주소"
-            android:inputType="textEmailAddress" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp">
+            <EditText
+                android:id="@+id/input_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="전화번호 혹은 이메일 주소"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <EditText
-            android:id="@+id/input_password"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="비밀번호"
-            android:inputType="textPassword" />
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
-    </com.google.android.material.textfield.TextInputLayout>
+            <EditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="비밀번호"
+                android:inputType="textPassword" />
 
-    <TextView
-        android:id="@+id/link_find_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
-        android:text="비밀번호가 기억나지 않아요!"
-        android:textColor="#E91E63" />
-
-
-    <Button
-        android:id="@+id/btn_email_login"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp"
-        android:text="Log in with Email" />
-
-    <TextView
-        android:id="@+id/link_signup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="3dp"
-        android:gravity="center"
-        android:text="이메일 계정 만들기"
-        android:textColor="#000000"
-        android:textSize="16dip"
-        android:textStyle="bold" />
-
-    <!--[START] Kakao Login-->
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:layout_marginBottom="10dp">
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/link_find_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="2dp"
-            android:alpha="1.0"
-            android:text="SNS 계정으로 로그인 하기" />
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:text="비밀번호가 기억나지 않아요!"
+            android:textColor="#E91E63" />
 
-        <View
-            android:id="@+id/divider"
+
+        <Button
+            android:id="@+id/btn_email_login"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:text="Log in with Email" />
+
+        <TextView
+            android:id="@+id/link_signup"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:background="?android:attr/listDivider" />>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:gravity="center"
+            android:text="이메일 계정 만들기"
+            android:textColor="#000000"
+            android:textSize="16dip"
+            android:textStyle="bold" />
 
-    </FrameLayout>
+        <!--[START] Kakao Login-->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="10dp">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="3dp">
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="2dp"
+                android:alpha="1.0"
+                android:text="SNS 계정으로 로그인 하기" />
 
-        <com.kakao.usermgmt.LoginButton
-            android:id="@+id/btn_Kakao_login"
-            android:layout_width="250dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:visibility="gone" />
+            <View
+                android:id="@+id/divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:background="?android:attr/listDivider" />>
 
-        <ImageButton
-            android:id="@+id/fakebtn_Kakao_login"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/loading_fail"
-            android:padding="0dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/btn_kakao_login" />
-    </FrameLayout>
-    <!--[END] Kakao Login-->
+        </FrameLayout>
 
-    <!--[START] Naver Login-->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="3dp">
 
-        <ImageButton
-            android:id="@+id/fakebtn_Naver_login"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/loading_fail"
-            android:padding="0dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/btn_naver_login" />
-    </FrameLayout>
-    <!--[END] Naver Login-->
+            <com.kakao.usermgmt.LoginButton
+                android:id="@+id/btn_Kakao_login"
+                android:layout_width="250dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:visibility="gone" />
 
-    <!--[START] Google Login-->
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
-        android:layout_marginBottom="3dp">
+            <ImageButton
+                android:id="@+id/fakebtn_Kakao_login"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/loading_fail"
+                android:padding="0dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/btn_kakao_login" />
+        </FrameLayout>
+        <!--[END] Kakao Login-->
 
-        <!--<com.google.android.gms.common.SignInButton-->
-        <!--android:id="@+id/btn_Google_login"-->
-        <!--android:layout_width="220dp"-->
-        <!--android:layout_height="20dp"-->
-        <!--android:layout_gravity="center"/>-->
+        <!--[START] Naver Login-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
 
-        <ImageButton
-            android:id="@+id/fakebtn_Google_login"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/loading_fail"
-            android:padding="0dp"
-            android:scaleType="fitXY"
-            android:src="@mipmap/btn_google_login" />
-    </FrameLayout>
-    <!--[END] Google Login-->
+            <ImageButton
+                android:id="@+id/fakebtn_Naver_login"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/loading_fail"
+                android:padding="0dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/btn_naver_login" />
+        </FrameLayout>
+        <!--[END] Naver Login-->
 
+        <!--[START] Google Login-->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp">
+
+            <!--<com.google.android.gms.common.SignInButton-->
+            <!--android:id="@+id/btn_Google_login"-->
+            <!--android:layout_width="220dp"-->
+            <!--android:layout_height="20dp"-->
+            <!--android:layout_gravity="center"/>-->
+
+            <ImageButton
+                android:id="@+id/fakebtn_Google_login"
+                android:layout_width="250dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/loading_fail"
+                android:padding="0dp"
+                android:scaleType="fitXY"
+                android:src="@mipmap/btn_google_login" />
+        </FrameLayout>
+        <!--[END] Google Login-->
+
+    </LinearLayout>
 </LinearLayout>

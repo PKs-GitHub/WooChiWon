@@ -45,8 +45,8 @@ public class KinderInfo_TimelineActivity extends Fragment {
 
         KinderInfoFragment = getParentFragment();
 
-        this_kinderinfo_name = KinderInfoFragment.getView().findViewById(R.id.kinderinfo_nickname).toString();
-        this_kinderinfo_location = KinderInfoFragment.getView().findViewById(R.id.kinderinfo_location).toString();
+        this_kinderinfo_name = KinderInfoFragment.getView().findViewById(R.id.kinderinfoName).toString();
+        this_kinderinfo_location = KinderInfoFragment.getView().findViewById(R.id.kinderinfoLocation).toString();
     }
 
     @Nullable

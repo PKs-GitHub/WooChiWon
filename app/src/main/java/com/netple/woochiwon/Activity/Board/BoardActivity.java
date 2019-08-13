@@ -16,10 +16,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import com.netple.woochiwon.Activity.Common.MainActivity;
 import com.netple.woochiwon.R;
 
-public class BoardActivity extends Fragment {
+public class BoardActivity extends Fragment implements MainActivity.OnBackPressedListener {
 
     private static int cnt = 0;
     private Button button;
@@ -39,7 +41,7 @@ public class BoardActivity extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.activity_frag3, container, false);
+        View rootView = inflater.inflate(R.layout.activity_board, container, false);
 
         button = rootView.findViewById(R.id.frag3_btn);
         progressBar = rootView.findViewById(R.id.frag3_progressBar);
@@ -61,7 +63,17 @@ public class BoardActivity extends Fragment {
 
             }
         });
+    }
 
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getChildFragmentManager();
+
+        if (fragmentManager.getBackStackEntryCount() == 2) {
+
+        } else {
+            (MainActivity.getInstance()).onBackPressedDefault();
+        }
     }
 
     class myAsync extends AsyncTask<Void, Void, Void> {
