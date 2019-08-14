@@ -26,7 +26,10 @@ import com.netple.woochiwon.Activity.Timeline.TimelineActivity;
 import com.netple.woochiwon.GeneralClass.NetworkStatus;
 import com.netple.woochiwon.R;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
 
         //앱 설정값 불러오기
         appData = getSharedPreferences("appData", MODE_PRIVATE);
-        load();
 
         setContentView(R.layout.activity_main);
 
@@ -199,20 +201,42 @@ public class MainActivity extends AppCompatActivity {
  ****************************************************/
 
 
-    public void save() {
+    public void save(String key, Object data) {
+
         SharedPreferences.Editor editor = appData.edit();
 
-        editor.putString("Key", "Storage Value");
+        if(data instanceof Integer) { editor.putInt(key, (Integer) data); }
+        else if(data instanceof String) { editor.putString(key, (String) data); }
+        else if(data instanceof Set) { editor.putStringSet(key, (Set<String>) data); }
+        else if(data instanceof Boolean) { editor.putBoolean(key, (Boolean) data); }
+        else if(data instanceof Long) { editor.putLong(key, (Long) data); }
+        else if(data instanceof Float) { editor.putFloat(key, (Float) data); }
 
-        editor.apply();
+        editor.commit();
     }
 
 
+    public Object load(String key, Object type) {
 
-    public void load() {
-        sharedPreferencesData = appData.getString("Key", "");
-        Log.d("###Data loaded::", sharedPreferencesData);
+        if(type instanceof Integer) { return appData.getInt(key, -1); }
+        else if(type instanceof String) { return appData.getString(key, null); }
+        else if(type instanceof Set) { return appData.getStringSet(key, null); }
+        else if(type instanceof Boolean) { return appData.getBoolean(key, false); }
+        else if(type instanceof Long) { return appData.getLong(key, -1); }
+        else if(type instanceof Float) { return appData.getFloat(key, -1); }
+
+        return null;
     }
+
+    public void clear(String key) {
+
+        SharedPreferences.Editor editor = appData.edit();
+
+        editor.remove(key);
+
+        editor.commit();
+    }
+
 
 
 

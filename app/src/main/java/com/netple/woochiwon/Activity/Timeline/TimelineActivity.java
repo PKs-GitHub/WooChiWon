@@ -1,7 +1,5 @@
 package com.netple.woochiwon.Activity.Timeline;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.netple.woochiwon.Activity.Common.MainActivity;
+import com.netple.woochiwon.Activity.Common.SplashActivity;
 import com.netple.woochiwon.DataType.TimelineItem;
 import com.netple.woochiwon.R;
 
@@ -32,11 +31,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static android.content.Context.MODE_PRIVATE;
-
 public class TimelineActivity extends Fragment implements MainActivity.OnBackPressedListener {
-
-    private SharedPreferences appData;
 
     float scale;
 
@@ -59,8 +54,6 @@ public class TimelineActivity extends Fragment implements MainActivity.OnBackPre
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        appData = getActivity().getSharedPreferences("appData", MODE_PRIVATE);
     }
 
     @Nullable
@@ -110,16 +103,17 @@ public class TimelineActivity extends Fragment implements MainActivity.OnBackPre
         sidoSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                SharedPreferences.Editor edt = appData.edit();
-                edt.putInt("Timeline_selected_SIDOindex", sidoSpinner.getSelectedItemPosition());
-                edt.commit();
+                ((MainActivity) getActivity()).save("Timeline_selected_SIDOindex", sidoSpinner.getSelectedItemPosition());
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) { //Do nothing }
             }
         });
-        int prev_index = appData.getInt("Timeline_selected_SIDOindex", -1);
+
+        int prev_index = -1;
+        ((MainActivity)getActivity()).load("Timeline_selected_SIDOindex", prev_index);
+
         if(prev_index >= 0)
             sidoSpinner.setSelection(prev_index);
     }

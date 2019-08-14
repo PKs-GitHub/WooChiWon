@@ -2,6 +2,7 @@ package com.netple.woochiwon.Activity.Account;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +32,7 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.netple.woochiwon.Activity.Common.MainActivity;
+import com.netple.woochiwon.Activity.Search.SearchActivity;
 import com.netple.woochiwon.R;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
@@ -45,7 +47,10 @@ import java.net.URL;
 
 
 public  class SignInActivity extends Fragment {
-    public AccountActivity parentFragment;
+
+    public SignInActivity instance;
+
+    public Fragment parentFragment;
 
     private Button email_loginbtn;
     private TextView signup_link;
@@ -68,30 +73,31 @@ public  class SignInActivity extends Fragment {
     private OAuthLoginHandler mOAuthLoginHandler = new NaverLoginHandler((MainActivity) getActivity());
 
 
+    public static SignInActivity newInstance() { return new SignInActivity(); }
 
     @Override
     public void onAttach(Context context) {
+
         super.onAttach(context);
 
-        parentFragment = (AccountActivity) SignInActivity.this.getParentFragment();
+        instance = this;
+        parentFragment = getParentFragment();
 
 
-
-
-        /**************************************
-         * [START] Kakao Login Init
-         **************************************/
+/**************************************
+ * [START] Kakao Login Init
+ **************************************/
         kakao_sessionCallBack = new kakao_SessionCallBack();
         Session.getCurrentSession().addCallback(kakao_sessionCallBack);
         Session.getCurrentSession().checkAndImplicitOpen();
-        /**************************************
-         * [END] Kakao Login Init
-         **************************************/
+/**************************************
+ * [END] Kakao Login Init
+ **************************************/
 
-        /**************************************
-         * [START] Google Login Init
-         **************************************/
-        //Check for exsiting Google Sign in Account
+/**************************************
+ * [START] Google Login Init
+ **************************************/
+        //Check for existing Google Sign in Account
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount((MainActivity) getActivity());
 
         if(account != null)
@@ -105,18 +111,18 @@ public  class SignInActivity extends Fragment {
                 .build();
 
         googleSignInClient = GoogleSignIn.getClient((MainActivity) getActivity(), gso);
-        /**************************************
-         * [END] Google Login Init
-         **************************************/
+/**************************************
+ * [END] Google Login Init
+ **************************************/
 
-        /**************************************
-         * [START] Naver Login Init
-         **************************************/
+/**************************************
+ * [START] Naver Login Init
+ **************************************/
         mOAuthLoginModule = OAuthLogin.getInstance();
         mOAuthLoginModule.init((MainActivity) getActivity(), "B4p9lfM_7aoNfpgSixRO", "qSbvF1XEdo", "WooChiWon");
-        /**************************************
-         * [END] Naver Login Init
-         **************************************/
+/**************************************
+ * [END] Naver Login Init
+ **************************************/
     }
 
     @Nullable
@@ -124,36 +130,34 @@ public  class SignInActivity extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.activity_signin, container, false);
-
+        kakao_loginbtn = rootView.findViewById(R.id.btn_Kakao_login);
+        fake_kakao_loginbtn = rootView.findViewById(R.id.fakebtn_Kakao_login);
+        fake_google_loginbtn = rootView.findViewById(R.id.fakebtn_Google_login);
+        fake_naver_loginbtn = rootView.findViewById(R.id.fakebtn_Naver_login);
         email_loginbtn = (Button) rootView.findViewById(R.id.btn_email_login);
+        signup_link = (TextView) rootView.findViewById(R.id.link_signup);
+
+
         email_loginbtn.setOnClickListener((view)->{
             onClick(view);
         });
 
-        signup_link = (TextView) rootView.findViewById(R.id.link_signup);
+
         signup_link.setOnClickListener((view)->{
             onClick(view);
         });
 
 
-
-        kakao_loginbtn = rootView.findViewById(R.id.btn_Kakao_login);
-
-
-        fake_kakao_loginbtn = rootView.findViewById(R.id.fakebtn_Kakao_login);
         fake_kakao_loginbtn.setOnClickListener((view)->{
             onClick(view);
         });
 
 
-
-        fake_google_loginbtn = rootView.findViewById(R.id.fakebtn_Google_login);
         fake_google_loginbtn.setOnClickListener((view)->{
             onClick(view);
         });
 
 
-        fake_naver_loginbtn = rootView.findViewById(R.id.fakebtn_Naver_login);
         fake_naver_loginbtn.setOnClickListener((view)->{
             onClick(view);
         });
@@ -161,19 +165,26 @@ public  class SignInActivity extends Fragment {
         return rootView;
     }
 
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Session.getCurrentSession().removeCallback(kakao_sessionCallBack);
+    }
+
     /**************************************
-     * [START] Buttons Listener
-     **************************************/
+ * [START] Buttons Listener
+ **************************************/
     public void onClick(View v) {
         switch (v.getId()) {
 
             case R.id.btn_email_login:
                 Log.d("###getActivity(): ", getActivity().toString());
-                parentFragment.email_signin();
+                ((AccountActivity)parentFragment).email_signin();
                 break;
 
             case R.id.link_signup:
-                parentFragment.email_signup();
+                ((AccountActivity)parentFragment).email_signup();
                 break;
 
             //Kakao 로그인 버튼 리스너
@@ -192,17 +203,35 @@ public  class SignInActivity extends Fragment {
                 break;
         }
     }
-    /**************************************
-     * [END] Buttons Listener
-     **************************************/
+/**************************************
+ * [END] Buttons Listener
+ **************************************/
+
+/**************************************
+ * [START] Check already signed in using SharedPreference
+ **************************************/
+
+    public boolean isSignedin() {
 
 
 
 
 
-    /**************************************
-     * [START] Google Login Handler
-     **************************************/
+
+        return false;
+    }
+
+
+
+/**************************************
+ * [END] Check already signed in using SharedPreference
+ **************************************/
+
+
+
+/**************************************
+ * [START] Google Login Handler
+ **************************************/
     //Google SignInIntent Activity 띄우기
     public void google_signin() {
         Intent signIntent = googleSignInClient.getSignInIntent();
@@ -236,15 +265,15 @@ public  class SignInActivity extends Fragment {
             Log.e("###Google Login Err::", e.toString());
         }
     }
-    /**************************************
-     * [END] Google Login Handler
-     **************************************/
+/**************************************
+ * [END] Google Login Handler
+ **************************************/
 
 
 
-    /**************************************
-     * [START] Kakao Login Handler
-     **************************************/
+/**************************************
+ * [START] Kakao Login Handler
+ **************************************/
 
     public void kakao_request() {
 
@@ -261,9 +290,7 @@ public  class SignInActivity extends Fragment {
 
             @Override
             public void onSuccess(UserProfile result) {
-                /*************************************
-                 * 로그인 성공시 수행할 루틴
-                 ************************************/
+                //로그인 성공시 수행할 루틴
                 String nickname = result.getNickname();
                 long id = result.getId();
                 String UUID = result.getUUID();
@@ -281,7 +308,6 @@ public  class SignInActivity extends Fragment {
         //로그인 성공
         @Override
         public void onSessionOpened() {
-
             kakao_request();
         }
 
@@ -291,15 +317,15 @@ public  class SignInActivity extends Fragment {
             Log.e("###Kakao Err::", "Session Fail Error: " + exception.getMessage().toString());
         }
     }
-    /**************************************
-     * [END] Kakao Login Handler
-     **************************************/
+/**************************************
+ * [END] Kakao Login Handler
+ **************************************/
 
 
 
-    /**************************************
-     * [START] Naver Login Handler
-     **************************************/
+/**************************************
+ * [START] Naver Login Handler
+ **************************************/
 
     public void IF_naver_login() {
         mOAuthLoginModule.startOauthLoginActivity((MainActivity) getActivity(), mOAuthLoginHandler);
@@ -311,7 +337,6 @@ public  class SignInActivity extends Fragment {
         public NaverLoginHandler(MainActivity activity) {
             mActivity = new WeakReference<MainActivity>(activity);
         }
-
 
         @Override
         public void run(boolean success) {
@@ -408,9 +433,44 @@ public  class SignInActivity extends Fragment {
             return result;
         }
     }
-    /**************************************
-     * [END] Naver Login Handler
-     **************************************/
+/**************************************
+ * [END] Naver Login Handler
+ **************************************/
+
+
+/**************************************
+* [START] AutoSignIn
+**************************************/
+    private void setAutoSignIn(String socialType, String email) {
+
+        ((MainActivity) getActivity()).save("prefSignInType", socialType);
+        ((MainActivity) getActivity()).save("prefSignInEmail", email);
+    }
+
+    private void getAutoSignIn(String socialType, String email) {
+
+        String type = "String";
+
+        if((String) ((MainActivity) getActivity()).load("prefSignInType", type) != null) {
+            socialType = (String) ((MainActivity) getActivity()).load("prefSignInType", type);
+            email = (String) ((MainActivity) getActivity()).load("prefSignInEmail", type);
+        }
+
+        else {
+            socialType = "";
+            email = "";
+        }
+    }
+
+    private void SignOff() {
+        ((MainActivity) getActivity()).clear("prefSignInType");
+        ((MainActivity) getActivity()).clear("prefSignInEmail");
+    }
+
+/**************************************
+* [END] AutoSignIn
+**************************************/
+
 }
 
 

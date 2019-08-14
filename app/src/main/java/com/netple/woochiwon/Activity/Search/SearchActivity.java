@@ -161,7 +161,11 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
              @Override
              public void onClick(View view) {
 
-                 new getKinderList_AsyncTask().execute();
+                 if(sidoSpinner.getSelectedItem().toString().indexOf("전체") >= 0)
+                     handler.sendMessage(Message.obtain(handler, 1));
+
+                 else
+                     new getKinderList_AsyncTask().execute();
              }
          });
 
@@ -406,18 +410,11 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
 
     private void setKinderList() {
 
-        //progressBar = instance.getView().findViewById(R.id.search_progressBar);
-
-
-        //progressBar.getProgressDrawable().setColorFilter(Color.parserColor("#00498c"), PorterDuff.Mode.MULTIPLY));
-
-        Log.d("###Pro bar Set as::", Integer.toString(progressBar.getVisibility()));
 
         kinderInfo_list = new ArrayList<>();
 
         Gson gson = new Gson();
 
-        //String SIDOcode = locationCode.getSIDOcode(sidoSpinner.getSelectedItem().toString());
         String SIDOcode = locationCode.getSIDOcode(sidoSpinner.getSelectedItem().toString());
         String SGGcode = "";
 
@@ -433,7 +430,9 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         //전체 시도 -> 전체 구
 
         if(SIDOcode.indexOf("99") >= 0) {
-            this.handler.sendMessage(Message.obtain(handler, 1));
+
+            //Do Nothing
+
         }
 
         //특정 시도
@@ -540,7 +539,6 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
             }
         }
 
-        //progressBar.getProgressDrawable().setColorFilter(Color.parseColor("#252525"), PorterDuff.Mode.MULTIPLY);
     }
 
     public List getKinderList() {
@@ -565,7 +563,7 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
         else {
             //TODO: "해당하는 결과가 없습니다"
             recyclerView.setAdapter(null);
-            Toast.makeText(getActivity(), "검색결과가 없습니다.", Toast.LENGTH_SHORT).show();
+            this.handler.sendMessage(Message.obtain(handler, 2));
         }
 
         recyclerAdapter.notifyDataSetChanged();
@@ -772,6 +770,10 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
             switch (msg.what) {
                 case 1:
                     Toast.makeText(getActivity(), "시/도를 먼저 선택해주세요", Toast.LENGTH_SHORT).show();
+                    break;
+
+                case 2:
+                    Toast.makeText(getActivity(), "검색결과가 없습니다.", Toast.LENGTH_SHORT).show();
                     break;
             }
         }

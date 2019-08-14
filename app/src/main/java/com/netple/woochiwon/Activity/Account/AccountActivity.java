@@ -25,11 +25,6 @@ import java.security.MessageDigest;
 
 public class AccountActivity extends Fragment implements MainActivity.OnBackPressedListener {
 
-    /**********************************************************
-     * [START] Var Area
-     **********************************************************/
-
-
     private FragmentTransaction fragmentTransaction;
 
     public enum LoginPlatoform {
@@ -38,10 +33,6 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
 
     public String logged_in_email;
 
-
-    /**********************************************************
-     * [END] Var Area
-     **********************************************************/
 
     public static AccountActivity newInstance(){
         return new AccountActivity();
@@ -79,9 +70,9 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
 
 
 
-    /**************************************
-     * [START] Email Login Handler
-     **************************************/
+/**************************************
+ * [START] Email Login Handler
+ **************************************/
     public void email_signin() {
         Log.d("###Test::", "emailsignin()");
     }
@@ -131,18 +122,18 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
     }
 
 
-    /**************************************
-     * [END] Email Login Handler
-     **************************************/
+/**************************************
+ * [END] Email Login Handler
+ **************************************/
 
 
 
 
 
 
-    /**************************************
-     * [START] Get App Key Hash
-     **************************************/
+/**************************************
+ * [START] Get App Key Hash
+ **************************************/
     private void get_keyHash(String s) {
         try {
             PackageInfo packageInfo = getActivity().getPackageManager().getPackageInfo(s, PackageManager.GET_SIGNATURES);
@@ -157,7 +148,7 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
             e.printStackTrace();
         }
     }
-    /**************************************
-     * [END] Get App Key Hash
-     **************************************/
+/**************************************
+ * [END] Get App Key Hash
+ **************************************/
 }
