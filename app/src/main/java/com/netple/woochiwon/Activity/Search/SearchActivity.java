@@ -235,8 +235,6 @@ public class SearchActivity extends Fragment implements MainActivity.OnBackPress
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        Log.d("###onAttach", this.toString());
-
         //( (MainActivity) context).setOnBackPressedListener(this);
     }
 

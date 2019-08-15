@@ -17,18 +17,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomnavigation.LabelVisibilityMode;
-import com.google.android.material.snackbar.Snackbar;
 import com.netple.woochiwon.Activity.Account.AccountActivity;
-import com.netple.woochiwon.Activity.Account.MyAccountActivity;
 import com.netple.woochiwon.Activity.Board.BoardActivity;
 import com.netple.woochiwon.Activity.Search.SearchActivity;
 import com.netple.woochiwon.Activity.Timeline.TimelineActivity;
 import com.netple.woochiwon.GeneralClass.NetworkStatus;
 import com.netple.woochiwon.R;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,15 +34,14 @@ public class MainActivity extends AppCompatActivity {
 
     private static MainActivity instance;
 
-    private FragmentManager main_FragmentManager;
-    private FragmentTransaction main_FragmentTransaction;
-    private Fragment active_Fragment;
+    private FragmentManager mainFragmentManager;
+    private FragmentTransaction mainFragmentTransaction;
+    private Fragment activeFragment;
 
     final Fragment fragment1 = TimelineActivity.newInstance();
     final Fragment fragment2 = SearchActivity.newInstance();
     final Fragment fragment3 = BoardActivity.newInstance();
     final Fragment fragment4 = AccountActivity.newInstance();
-    final Fragment fragment5 = MyAccountActivity.newInstance();
 
     public int ScreenWidth;
     public int ScreenHeight;
@@ -88,15 +83,16 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
 
-        main_FragmentManager = getSupportFragmentManager();
-        main_FragmentTransaction = main_FragmentManager.beginTransaction();
+        mainFragmentManager = getSupportFragmentManager();
+        mainFragmentTransaction = mainFragmentManager.beginTransaction();
 
-        main_FragmentManager.beginTransaction().add(R.id.main_frame, fragment4, "4").hide(fragment4).commit();
-        main_FragmentManager.beginTransaction().add(R.id.main_frame, fragment3, "3").hide(fragment3).commit();
-        main_FragmentManager.beginTransaction().add(R.id.main_frame, fragment2, "2").hide(fragment2).commit();
+        mainFragmentTransaction.add(R.id.main_frame, fragment4, "4").hide(fragment4);
+        mainFragmentTransaction.add(R.id.main_frame, fragment3, "3").hide(fragment3);
+        mainFragmentTransaction.add(R.id.main_frame, fragment2, "2").hide(fragment2);
 
-        main_FragmentManager.beginTransaction().add(R.id.main_frame, fragment1, "1").commit();
-        active_Fragment = fragment1;
+        //초기 fragment => fragment1
+        mainFragmentTransaction.add(R.id.main_frame, fragment1, "1").commit();
+        activeFragment = fragment1;
 
         BottomNavigationView navView = findViewById(R.id.bottom_navigation);
         navView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
@@ -115,24 +111,28 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.bottom_nav_menu_1:
-                    main_FragmentManager.beginTransaction().hide(active_Fragment).show(fragment1).commit();
-                    active_Fragment = fragment1;
+                    mainFragmentTransaction = mainFragmentManager.beginTransaction();
+                    mainFragmentTransaction.hide(activeFragment).show(fragment1).commit();
+                    activeFragment = fragment1;
 
                     return true;
 
                 case R.id.bottom_nav_menu_2:
-                    main_FragmentManager.beginTransaction().hide(active_Fragment).show(fragment2).commit();
-                    active_Fragment = fragment2;
+                    mainFragmentTransaction = mainFragmentManager.beginTransaction();
+                    mainFragmentTransaction.hide(activeFragment).show(fragment2).commit();
+                    activeFragment = fragment2;
                     return true;
 
                 case R.id.bottom_nav_menu_3:
-                    main_FragmentManager.beginTransaction().hide(active_Fragment).show(fragment3).commit();
-                    active_Fragment = fragment3;
+                    mainFragmentTransaction = mainFragmentManager.beginTransaction();
+                    mainFragmentTransaction.hide(activeFragment).show(fragment3).commit();
+                    activeFragment = fragment3;
                     return true;
 
                 case R.id.bottom_nav_menu_4:
-                    main_FragmentManager.beginTransaction().hide(active_Fragment).show(fragment4).commit();
-                    active_Fragment = fragment4;
+                    mainFragmentTransaction = mainFragmentManager.beginTransaction();
+                    mainFragmentTransaction.hide(activeFragment).show(fragment4).commit();
+                    activeFragment = fragment4;
                     return true;
 
             }
@@ -237,7 +237,9 @@ public class MainActivity extends AppCompatActivity {
         editor.commit();
     }
 
-
+    public void showAllPref() {
+        Log.d("###appData::", appData.getAll().toString());
+    }
 
 
 /*****************************************************

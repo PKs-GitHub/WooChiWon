@@ -2,7 +2,6 @@ package com.netple.woochiwon.Activity.Account;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,7 +31,6 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.netple.woochiwon.Activity.Common.MainActivity;
-import com.netple.woochiwon.Activity.Search.SearchActivity;
 import com.netple.woochiwon.R;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
@@ -44,6 +42,7 @@ import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 
 
 public  class SignInActivity extends Fragment {
@@ -211,17 +210,6 @@ public  class SignInActivity extends Fragment {
  * [START] Check already signed in using SharedPreference
  **************************************/
 
-    public boolean isSignedin() {
-
-
-
-
-
-
-        return false;
-    }
-
-
 
 /**************************************
  * [END] Check already signed in using SharedPreference
@@ -261,6 +249,9 @@ public  class SignInActivity extends Fragment {
 
             Log.d("###Google Email::", account.getEmail());
             Log.d("###Google ID::", account.getId());
+
+            setLastSignIn("Google", account.getEmail());
+
         } catch(ApiException e) {
             Log.e("###Google Login Err::", e.toString());
         }
@@ -441,32 +432,33 @@ public  class SignInActivity extends Fragment {
 /**************************************
 * [START] AutoSignIn
 **************************************/
-    private void setAutoSignIn(String socialType, String email) {
+    private void setLastSignIn(String socialType, String email) {
 
-        ((MainActivity) getActivity()).save("prefSignInType", socialType);
-        ((MainActivity) getActivity()).save("prefSignInEmail", email);
+        MainActivity.getInstance().save("LastSignInType", socialType);
+        MainActivity.getInstance().save("LastSignInEmail", email);
     }
 
-    private void getAutoSignIn(String socialType, String email) {
+    public HashMap<String, String> getLastSignIn() {
 
+        HashMap<String, String> lastMap = new HashMap<>();
         String type = "String";
+        String socialType = "";
+        String email = "";
 
-        if((String) ((MainActivity) getActivity()).load("prefSignInType", type) != null) {
-            socialType = (String) ((MainActivity) getActivity()).load("prefSignInType", type);
-            email = (String) ((MainActivity) getActivity()).load("prefSignInEmail", type);
+        if((String) MainActivity.getInstance().load("LastSignInType", type) != null) {
+            socialType = (String) MainActivity.getInstance().load("LastSignInType", type);
+            email = (String) MainActivity.getInstance().load("LastSignInEmail", type);
         }
 
         else {
             socialType = "";
             email = "";
         }
-    }
 
-    private void SignOff() {
-        ((MainActivity) getActivity()).clear("prefSignInType");
-        ((MainActivity) getActivity()).clear("prefSignInEmail");
-    }
+        lastMap.put(socialType, email);
 
+        return lastMap;
+    }
 /**************************************
 * [END] AutoSignIn
 **************************************/
