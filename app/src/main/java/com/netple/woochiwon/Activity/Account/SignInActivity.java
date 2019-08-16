@@ -69,7 +69,7 @@ public  class SignInActivity extends Fragment {
 
     //Naver Login Var
     public static OAuthLogin mOAuthLoginModule;
-    private OAuthLoginHandler mOAuthLoginHandler = new NaverLoginHandler((MainActivity) getActivity());
+    private OAuthLoginHandler mOAuthLoginHandler = new NaverLoginHandler(MainActivity.getInstance());
 
 
     public static SignInActivity newInstance() { return new SignInActivity(); }
