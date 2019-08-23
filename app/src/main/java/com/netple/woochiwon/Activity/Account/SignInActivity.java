@@ -47,7 +47,7 @@ import java.util.HashMap;
 
 public  class SignInActivity extends Fragment {
 
-    public SignInActivity instance;
+    public static SignInActivity instance;
 
     public Fragment parentFragment;
 
@@ -61,7 +61,7 @@ public  class SignInActivity extends Fragment {
     private ImageButton fake_naver_loginbtn;
 
     //Kakao Login Var
-    public kakao_SessionCallBack kakao_sessionCallBack;
+    public static kakao_SessionCallBack kakao_sessionCallBack;
 
     //Google Login Var
     public static final int GOOGLE_RC_SIGN_IN=1;
@@ -72,7 +72,12 @@ public  class SignInActivity extends Fragment {
     private OAuthLoginHandler mOAuthLoginHandler = new NaverLoginHandler(MainActivity.getInstance());
 
 
-    public static SignInActivity newInstance() { return new SignInActivity(); }
+    public static SignInActivity newInstance() {
+        instance = new SignInActivity();
+        return instance;
+    }
+
+    public static SignInActivity getInstance() { return instance; }
 
     @Override
     public void onAttach(Context context) {
@@ -86,9 +91,6 @@ public  class SignInActivity extends Fragment {
 /**************************************
  * [START] Kakao Login Init
  **************************************/
-        kakao_sessionCallBack = new kakao_SessionCallBack();
-        Session.getCurrentSession().addCallback(kakao_sessionCallBack);
-        Session.getCurrentSession().checkAndImplicitOpen();
 /**************************************
  * [END] Kakao Login Init
  **************************************/
@@ -148,6 +150,9 @@ public  class SignInActivity extends Fragment {
 
 
         fake_kakao_loginbtn.setOnClickListener((view)->{
+            kakao_SessionCallBack kakao_sessionCallBack = new kakao_SessionCallBack();
+            Session.getCurrentSession().addCallback(kakao_sessionCallBack);
+            Session.getCurrentSession().checkAndImplicitOpen();
             onClick(view);
         });
 
@@ -168,7 +173,7 @@ public  class SignInActivity extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        Session.getCurrentSession().removeCallback(kakao_sessionCallBack);
+        //Session.getCurrentSession().removeCallback(kakao_sessionCallBack);
     }
 
     /**************************************
@@ -251,7 +256,7 @@ public  class SignInActivity extends Fragment {
             Log.d("###Google ID::", account.getId());
 
             setLastSignIn("Google", account.getEmail());
-
+            AccountActivity.getInstance().signOK("Google", account.getEmail());
         } catch(ApiException e) {
             Log.e("###Google Login Err::", e.toString());
         }
@@ -289,6 +294,11 @@ public  class SignInActivity extends Fragment {
                 Log.d("###Kakao Nickname:: ", nickname + "");
                 Log.d("###Kakao ID:: ", id + "");
                 Log.d("###Kakao UUID:: ", UUID + "");
+
+                //Auto SignIn
+                setLastSignIn("Kakao", Long.toString(id));
+
+                AccountActivity.getInstance().signOK("Kakao", Long.toString(id));
             }
         });
     }
@@ -353,6 +363,11 @@ public  class SignInActivity extends Fragment {
 
                 Log.d("###Naver Login Token::", accessToken);
                 Log.d("###Naver HTTP Result::", emailAddress);
+
+                //Auto SignIn
+                setLastSignIn("Naver", emailAddress);
+
+                AccountActivity.getInstance().signOK("Naver", emailAddress);
             }
             else {
                 String errorCode = mOAuthLoginModule.getLastErrorCode(activity).getCode();
@@ -432,13 +447,13 @@ public  class SignInActivity extends Fragment {
 /**************************************
 * [START] AutoSignIn
 **************************************/
-    private void setLastSignIn(String socialType, String email) {
+    private static void setLastSignIn(String socialType, String email) {
 
         MainActivity.getInstance().save("LastSignInType", socialType);
         MainActivity.getInstance().save("LastSignInEmail", email);
     }
 
-    public HashMap<String, String> getLastSignIn() {
+    public static HashMap<String, String> getLastSignIn() {
 
         HashMap<String, String> lastMap = new HashMap<>();
         String type = "String";

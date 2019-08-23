@@ -47,7 +47,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 
     //kakao
-    implementation group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
+    implementation group: 'com.kakao.sdk', name: 'usermgmt', version: project.KAKAO_SDK_VERSION
 
     //Firebase
     implementation 'com.google.firebase:firebase-core:16.0.8'

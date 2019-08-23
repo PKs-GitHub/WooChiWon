@@ -6,11 +6,14 @@ import android.content.DialogInterface;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +28,8 @@ import java.security.MessageDigest;
 import java.util.HashMap;
 
 public class AccountActivity extends Fragment implements MainActivity.OnBackPressedListener {
+
+    private ProgressBar progressBar;
 
     private FragmentManager accountFragmentManager;
     private FragmentTransaction accountFragmentTransaction;
@@ -72,6 +77,8 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
 
         View rootView = inflater.inflate(R.layout.activity_account, container, false);
 
+        progressBar = rootView.findViewById(R.id.progressBar);
+
         accountFragmentManager = getChildFragmentManager();
         accountFragmentTransaction = accountFragmentManager.beginTransaction();
         //accountFragmentTransaction.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_right, R.anim.enter_from_right, R.anim.exit_to_right);
@@ -91,8 +98,6 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
             case 2:
                 accountFragmentManager.beginTransaction().add(R.id.accountFrameLayout, fragment1, "SignIn").hide(fragment1);
                 accountFragmentManager.beginTransaction().add(R.id.accountFrameLayout, fragment2, "MyAccount").show(fragment2).commit();
-
-
                 activeFragment = fragment2;
                 break;
         }
@@ -160,13 +165,12 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
  **************************************/
 
 /**************************************
- * [START] Get App Key Hash
+ * [START] Sign in/off handler
  **************************************/
 
     private int checkSignedIn() {
 
         HashMap<String, String> lastMap = new HashMap<>();
-
 
         lastMap = signInActivity.getLastSignIn();
 
@@ -185,21 +189,115 @@ public class AccountActivity extends Fragment implements MainActivity.OnBackPres
             return 1;
     }
 
-    public void signOff() {
+    public void signOK(String socialType, String eMail) {
 
-        MainActivity.getInstance().clear("LastSignInType");
-        MainActivity.getInstance().clear("LastSignInEmail");
-        MainActivity.getInstance().showAllPref();
+        new AsyncTask<Void, Void, Void> () {
 
-        accountFragmentTransaction = accountFragmentManager.beginTransaction();
-        accountFragmentTransaction.replace(R.id.accountFrameLayout, fragment1).commit();
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //Disable any touch on the screen
+                getActivity().getWindow().setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.bringToFront();
+                progressBar.invalidate();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
+
+                myAccountActivity.setSocialType(socialType);
+                myAccountActivity.setEmail(eMail);
+                try {
+                    Thread.sleep(1000);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                //Enable touch on the screen again
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                progressBar.setVisibility(View.GONE);
+                accountFragmentTransaction = accountFragmentManager.beginTransaction();
+                accountFragmentTransaction.replace(R.id.accountFrameLayout, fragment2).commit();
+            }
+        }.execute();
     }
 
+    public void signOff() {
+
+        new AsyncTask<Void, Void, Void> () {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                //Disable any touch on the screen
+                getActivity().getWindow().setFlags(
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                progressBar.setVisibility(View.VISIBLE);
+                progressBar.bringToFront();
+                progressBar.invalidate();
+            }
+
+            @Override
+            protected Void doInBackground(Void... voids) {
 
 
+                MainActivity.getInstance().clear("LastSignInType");
+                MainActivity.getInstance().clear("LastSignInEmail");
+                MainActivity.getInstance().showAllPref();
+                try {
+                    Thread.sleep(1000);
+                }catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                //Enable touch on the screen again
+                getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                progressBar.setVisibility(View.GONE);
+
+                accountFragmentTransaction = accountFragmentManager.beginTransaction();
+                accountFragmentTransaction.replace(R.id.accountFrameLayout, fragment1).commit();
+            }
+        }.execute();
+    }
+
+    /*
+    private void kakao_SignOff() {
+        if (Session.getCurrentSession().isOpened()) {
+            // 로그인 상태
+            UserManagement.requestLogout(new LogoutResponseCallback() {
+                @Override
+                public void onCompleteLogout() {
+
+                }
+            });
+            Session.getCurrentSession().clearCallbacks();
+        } else {
+            // 로그인되어있지 않은 상태
+        }
+    }
+    */
 /**************************************
- * [END] Get App Key Hash
+ * [END] Sign in/off handler
  **************************************/
+
 
 
 
